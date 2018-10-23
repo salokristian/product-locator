@@ -1,0 +1,32 @@
+.landing-page-header-container {
+  display: inline-flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.landing-page-title {
+  display: flex;
+  width: 70%;
+  background: yellow;
+  height: 50px;
+}
+
+.landing-page-header-container h2 {
+  margin: auto;
+  font-size: 20px;
+}
+
+.landing-page-header-container .landing-page-login {
+  margin: auto;
+  width: 80px;
+  border: 1px solid black;
+  border-radius: 40px;
+  background: lightblue;
+  height: 80px;
+  cursor: pointer;
+  display: flex;
+}
+
+.landing-page-header-container .landing-page-login p {
+  margin: auto;
+}
