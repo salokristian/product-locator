@@ -48,6 +48,38 @@ export default class StoreLayoutPage extends Component {
 
     console.log(floorsShelvesJson);
 
+
+    //generate svg for floor
+    var svg = '';
+   
+    var i;
+    var j;
+    var points = floorsShelvesJson['floors'][0]['points'];
+    console.log(points.length);
+    for (i = 0; i < points.length ; i++) {
+      if (i+1 < points.length) {
+        j = i + 1;
+      }
+      else {
+        j = 0;
+      }
+      svg += '<line ';
+      svg += 'x1="' + points[i][0].toString() + '" ';
+      svg += 'y1="' + points[i][1].toString() + '" ';
+      svg += 'x2="' + points[j][0].toString() + '" ';
+      svg += 'y2="' + points[j][1].toString() + '" ';
+      svg += 'style="stroke:rgb(255,0,0);stroke-width:2" />\n>';
+    }
+
+    
+    
+    console.log(svg);
+    return <svg dangerouslySetInnerHTML={{__html: svg}} />;
+
+
+
+
+
   }
 
 
@@ -55,10 +87,11 @@ export default class StoreLayoutPage extends Component {
     return (
       <div className="store-layout-page">
         <div className="product-search-bar">search bar
-          {this.getSvg()}
+          
         </div>
         <div className="store-layout">
           kartta
+          {this.getSvg()}
         </div>
       </div>
     );
