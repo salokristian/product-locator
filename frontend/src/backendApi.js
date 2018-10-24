@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+// en oo varma tarviiko ereillistä backendapi komponenttia edes
+
 export default class backendApi extends Component {
   constructor(props) {
     super(props);

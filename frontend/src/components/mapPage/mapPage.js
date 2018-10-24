@@ -13,9 +13,40 @@ export default class StoreLayoutPage extends Component {
     };
   }
 
-  renderSvg() {
-    var shelvesJson = backendApi.getFloorsAndShelves(this.state.storeId);
-    return JSON.stringify(shelvesJson);
+  getSvg() {
+    var floorsShelvesJson = {
+      'floors': [
+        {
+          'id': 1,
+          'number': 1,
+          'description': 'First and only floor.',
+          'points': [[0, 0], [20, 0], [20, 20], [0, 20]],
+          'store': 1
+        }
+      ],
+      'shelves': [
+        {
+          'id': 1,
+          'x_location': 3,
+          'y_location': 4,
+          'width': 5,
+          'height': 1,
+          'floor': 1,
+          'type': 'shelf'
+        },
+        {
+          'id': 2,
+          'x_location': 10,
+          'y_location': 10,
+          'width': 2,
+          'height': 7,
+          'floor': 1,
+          'type': 'shelf'
+        }
+      ]
+    };
+
+    console.log(floorsShelvesJson);
 
   }
 
@@ -24,7 +55,7 @@ export default class StoreLayoutPage extends Component {
     return (
       <div className="store-layout-page">
         <div className="product-search-bar">search bar
-          {this.renderSvg()}
+          {this.getSvg()}
         </div>
         <div className="store-layout">
           kartta
