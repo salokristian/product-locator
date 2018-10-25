@@ -1,19 +1,24 @@
+@import url('https://fonts.googleapis.com/css?family=Mali');
+
 .landing-page-header-container {
   display: inline-flex;
   justify-content: space-between;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 .landing-page-title {
   display: flex;
-  width: 70%;
-  background: yellow;
+  width: 90%;
   height: 50px;
+  padding-top: 10px;
 }
 
 .landing-page-header-container h2 {
   margin: auto;
-  font-size: 20px;
+  font-size: 30px;
+  font-weight: 600;
+  font-family: 'Mali';
 }
 
 .landing-page-header-container .landing-page-login {
