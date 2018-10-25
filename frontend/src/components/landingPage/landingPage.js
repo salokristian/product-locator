@@ -97,7 +97,7 @@ class LandingPage extends Component {
             onClick={this.loginClick}
           >
             <p> 
-            Log In
+              {!account ? 'Log In' : 'Settings'}
             </p>
           </div>
         </div>
@@ -137,6 +137,10 @@ class LandingPage extends Component {
             <p> Admin tools </p>
           </div>
           }
+        </div>
+        <div className="landing-page-filter-titles">
+          <p className="landing-page-title-store-name"> Store name </p>
+          <p className="landing-page-title-distance"> Distance </p>
         </div>
         <div className="landing-page-store-list-container">
           { stores && stores.map((store) => (

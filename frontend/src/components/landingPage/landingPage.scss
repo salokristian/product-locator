@@ -41,6 +41,8 @@
   display: inline-flex;
 }
 
+
+
 .landing-page-filter-names {
   display: flex;
   width: 24%;
@@ -54,11 +56,36 @@
 }
 
 .landing-page-store-list-container {
-  margin-top: 10px;
   width: 100%;
   min-height: 300px;
   border: 1px solid black;
+  max-height: 500px;
   overflow-y: scroll;
+}
+
+.landing-page-filter-titles {
+  margin-top: 10px;
+  width: 100%;
+  display: inline-flex;
+  height: 20px;
+  border: 1px solid black;
+  border-bottom: 0;
+}
+
+.landing-page-title-store-name {
+  display: inline-block;
+  width: 80%;
+  margin: 0;
+  padding-left: 1%;
+  border-right: 1px solid grey;
+}
+
+.landing-page-title-distance {
+  display: inline-block;
+  width: 17%;
+  margin: 0;
+  text-align: center;
+  overflow: hidden;
 }
 
 .landing-page-user-info {
