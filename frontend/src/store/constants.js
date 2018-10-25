@@ -1,0 +1,9 @@
+const actionTypes = {
+  SET_ACCOUNT: 'SET_ACCOUNT',
+  INIT_NEARBY_STORES_FETCH: 'INIT_NEARBY_STORES_FETCH',
+  SET_NEARBY_STORES: 'SET_NEARBY_STORES',
+};
+
+export {
+  actionTypes,
+};

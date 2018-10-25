@@ -1,33 +1,41 @@
 import React, { Component } from 'react';
-import getList from './mockdata';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import { setAccount, fetchNearbyStores } from '../../store/actions/index';
 import StoreListItem from './storeListItem';
 import './landingPage.scss';
 
-export default class LandingPage extends Component {
+class LandingPage extends Component {
 
   constructor(...args) {
     super(...args);
 
     this.state = {
-      loggedIn: false,
       store: null,
       nearby: true,
       favourites: false,
       history: false,
       adminTools: false,
     };
-    this.testList = getList();
+  }
+
+  componentDidMount() {
+    this.props.fetchNearbyStores('location');
   }
 
 
   loginClick = () => {
-    this.setState({
-      loggedIn: !this.state.loggedIn,
-    });
+    const { setAccount, account } = this.props;
+    if (!account) {
+      setAccount({
+        name: 'test user',
+        role: 'Admin',
+      });
+    }
   }
 
   selectStore = (id) => {
-    const foundStore = this.testList.find(store => store.id === id);
+    const foundStore = this.props.stores.find(store => store.id === id);
     this.setState({store: foundStore});
   };
 
@@ -68,7 +76,8 @@ export default class LandingPage extends Component {
   };
 
   render() {
-    const { loggedIn = false, store, nearby, favourites, history, adminTools } = this.state;
+    const { store, nearby, favourites, history, adminTools } = this.state;
+    const { account, stores } = this.props;
 
     const clickedFilterBorder = {
       border: '3px solid black',
@@ -92,6 +101,7 @@ export default class LandingPage extends Component {
             </p>
           </div>
         </div>
+        {account && <p className="landing-page-user-info"> {`You are logged in as ${account.name}, role ${account.role}`}</p>}
         <div className="landing-page-filters">
           <div 
             className="landing-page-filter-names"
@@ -100,7 +110,7 @@ export default class LandingPage extends Component {
           >
             <p> Nearby </p>
           </div>
-          { loggedIn &&
+          { account &&
           <div 
             className="landing-page-filter-names"
             style={favourites ? clickedFilterBorder : nonClickedFilterBorder}
@@ -109,7 +119,7 @@ export default class LandingPage extends Component {
             <p> Favourites </p>
           </div>
           }
-          { loggedIn &&
+          { account &&
           <div 
             className="landing-page-filter-names"
             style={history ? clickedFilterBorder : nonClickedFilterBorder}
@@ -118,7 +128,7 @@ export default class LandingPage extends Component {
             <p> History </p>
           </div>
           }
-          { loggedIn &&
+          { account && account.role === 'Admin' &&
           <div 
             className="landing-page-filter-names"
             style={adminTools ? clickedFilterBorder : nonClickedFilterBorder}
@@ -129,7 +139,7 @@ export default class LandingPage extends Component {
           }
         </div>
         <div className="landing-page-store-list-container">
-          { this.testList && this.testList.map((store) => (
+          { stores && stores.map((store) => (
             <StoreListItem
               id={store.id}
               title={store.name}
@@ -145,3 +155,32 @@ export default class LandingPage extends Component {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => (
+  {
+    setAccount: (json) => { dispatch(setAccount(json)); },
+    fetchNearbyStores: (location) => { dispatch(fetchNearbyStores(location)); },
+  }
+);
+
+const mapStateToProps = state => (
+  {
+    account: state.productLocator.account,
+    stores: state.productLocator.stores,
+  }
+);
+
+LandingPage.propTypes = {
+  stores: PropTypes.array.isRequired,
+  account: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    role: PropTypes.string.isRequired
+  }),
+  setAccount: PropTypes.func.isRequired,
+  fetchNearbyStores: PropTypes.func.isRequired,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LandingPage);
