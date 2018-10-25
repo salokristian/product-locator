@@ -30,3 +30,27 @@
 .landing-page-header-container .landing-page-login p {
   margin: auto;
 }
+
+.landing-page-filters {
+  width: 100%;
+  display: inline-flex;
+}
+
+.landing-page-filter-names {
+  display: flex;
+  width: 24%;
+  border: 1px solid black;
+  cursor: pointer;
+
+}
+
+.landing-page-filter-names p {
+  margin: auto;
+}
+
+.landing-page-store-list-container {
+  margin-top: 10px;
+  width: 100%;
+  min-height: 300px;
+  border: 1px solid black;
+}
