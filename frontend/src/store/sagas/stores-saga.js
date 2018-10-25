@@ -1,6 +1,6 @@
 import { put, takeEvery } from 'redux-saga/effects';
 import { actionTypes } from '../constants';
-import getList from './store-api';
+import { getList, getStoresByName } from './store-api';
 
 function* fetchNearbyStores(action) {
   const { payload } = action;
@@ -9,7 +9,20 @@ function* fetchNearbyStores(action) {
   const storeList = yield getList(location);
 
   yield put({
-    type: actionTypes.SET_NEARBY_STORES,
+    type: actionTypes.SET_STORES,
+    payload: {
+      stores: storeList,
+    },
+  });
+}
+
+function* fetchStoresByName(action) {
+  const { payload } = action;
+  const { text } = payload;
+
+  const storeList = yield getStoresByName(text);
+  yield put({
+    type: actionTypes.SET_STORES,
     payload: {
       stores: storeList,
     },
@@ -18,4 +31,5 @@ function* fetchNearbyStores(action) {
 
 export default function* storesSaga() {
   yield takeEvery(actionTypes.INIT_NEARBY_STORES_FETCH, fetchNearbyStores);
+  yield takeEvery(actionTypes.INIT_STORES_FETCH_BY_NAME, fetchStoresByName);
 }

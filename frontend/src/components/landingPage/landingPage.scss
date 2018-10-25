@@ -64,7 +64,6 @@
 }
 
 .landing-page-filter-titles {
-  margin-top: 10px;
   width: 100%;
   display: inline-flex;
   height: 20px;
@@ -90,4 +89,10 @@
 
 .landing-page-user-info {
   float: right;
+}
+
+.landing-page input {
+  margin-top: 10px;
+  height: 20px;
+  width: 40%;
 }

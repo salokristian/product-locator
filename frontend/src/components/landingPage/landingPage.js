@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { setAccount, fetchNearbyStores } from '../../store/actions/index';
+import { setAccount, fetchNearbyStores, fetchByStoreName } from '../../store/actions/index';
 import StoreListItem from './storeListItem';
 import './landingPage.scss';
 
@@ -16,6 +16,7 @@ class LandingPage extends Component {
       favourites: false,
       history: false,
       adminTools: false,
+      searchText: '',
     };
   }
 
@@ -75,8 +76,15 @@ class LandingPage extends Component {
     });
   };
 
+  handleStoreSearch = (event) => {
+    const target = event.target;
+    const value = target.value;
+    this.props.fetchByStoreName(value);
+    this.setState({ searchText: value });
+  };
+
   render() {
-    const { store, nearby, favourites, history, adminTools } = this.state;
+    const { store, nearby, favourites, history, adminTools, searchText } = this.state;
     const { account, stores } = this.props;
 
     const clickedFilterBorder = {
@@ -87,7 +95,7 @@ class LandingPage extends Component {
     };
   
     return (
-      <div>
+      <div className="landing-page">
         <div className="landing-page-header-container">
           <div className="landing-page-title">
             <h2> Product Locator </h2>
@@ -138,6 +146,7 @@ class LandingPage extends Component {
           </div>
           }
         </div>
+        <input type="text" value={searchText} onChange={this.handleStoreSearch} placeholder="Search stores by name"/>
         <div className="landing-page-filter-titles">
           <p className="landing-page-title-store-name"> Store name </p>
           <p className="landing-page-title-distance"> Distance </p>
@@ -164,6 +173,7 @@ const mapDispatchToProps = dispatch => (
   {
     setAccount: (json) => { dispatch(setAccount(json)); },
     fetchNearbyStores: (location) => { dispatch(fetchNearbyStores(location)); },
+    fetchByStoreName: (text) => { dispatch(fetchByStoreName(text)); },
   }
 );
 
@@ -182,6 +192,7 @@ LandingPage.propTypes = {
   }),
   setAccount: PropTypes.func.isRequired,
   fetchNearbyStores: PropTypes.func.isRequired,
+  fetchByStoreName: PropTypes.func.isRequired,
 };
 
 export default connect(

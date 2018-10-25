@@ -18,7 +18,18 @@ function fetchNearbyStores(location) {
   };
 }
 
+function fetchByStoreName(text) {
+  return {
+    type: actionTypes.INIT_STORES_FETCH_BY_NAME,
+    payload: {
+      text,
+    },
+  };
+
+}
+
 export {
   setAccount,
   fetchNearbyStores,
+  fetchByStoreName,
 };
