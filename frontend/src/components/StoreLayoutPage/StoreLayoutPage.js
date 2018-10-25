@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import backendApi from 'backendApi';
+import './StoreLayoutPage.scss';
+// import backendApi from 'backendApi';
 
 export default class StoreLayoutPage extends Component {
   constructor(props) {
@@ -46,16 +47,12 @@ export default class StoreLayoutPage extends Component {
       ]
     };
 
-    console.log(floorsShelvesJson);
-
-
     //generate svg for floor
     var svg = '';
    
     var i;
     var j;
     var points = floorsShelvesJson['floors'][0]['points'];
-    console.log(points.length);
     for (i = 0; i < points.length ; i++) {
       if (i+1 < points.length) {
         j = i + 1;
@@ -68,13 +65,27 @@ export default class StoreLayoutPage extends Component {
       svg += 'y1="' + points[i][1].toString() + '" ';
       svg += 'x2="' + points[j][0].toString() + '" ';
       svg += 'y2="' + points[j][1].toString() + '" ';
-      svg += 'style="stroke:rgb(255,0,0);stroke-width:2" />\n>';
+      svg += 'style="stroke:rgb(0,0,0);" />\n';
     }
+
+    //shelves
+
+    var shelves = floorsShelvesJson['shelves'];
+
+    for (i = 0; i < shelves.length; i++) {
+      svg += '<rect ';
+      svg += ' x = "' + shelves[i]['x_location'] + '"';
+      svg += ' y = "' + shelves[i]['y_location'] + '"';
+      svg += ' width = "' + shelves[i]['width'] + '"';
+      svg += ' height = "' + shelves[i]['height'] + '"';
+      svg += ' fill=blue />\n';
+    }
+    
 
     
     
     console.log(svg);
-    return <svg dangerouslySetInnerHTML={{__html: svg}} />;
+    return <svg width="20" height="20" viewBox="0 0 20 20" dangerouslySetInnerHTML={{__html: svg}} />;
 
 
 
@@ -86,11 +97,10 @@ export default class StoreLayoutPage extends Component {
   render() {
     return (
       <div className="store-layout-page">
-        <div className="product-search-bar">search bar
-          
+        <div className="product-search-bar">
+        search bar
         </div>
         <div className="store-layout">
-          kartta
           {this.getSvg()}
         </div>
       </div>
