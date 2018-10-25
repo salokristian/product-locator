@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import getList from './mockdata';
+import StoreListItem from './storeListItem';
 import './landingPage.scss';
 
 export default class LandingPage extends Component {
@@ -9,6 +10,7 @@ export default class LandingPage extends Component {
 
     this.state = {
       loggedIn: false,
+      store: null,
     };
     this.testList = getList();
   }
@@ -19,8 +21,14 @@ export default class LandingPage extends Component {
       loggedIn: !this.state.loggedIn,
     });
   }
+
+  selectStore = (id) => {
+    const foundStore = this.testList.find(store => store.id === id);
+    this.setState({store: foundStore});
+  };
+
   render() {
-    const { loggedIn = false } = this.state;
+    const { loggedIn = false, store } = this.state;
     return (
       <div>
         <div className="landing-page-header-container">
@@ -57,7 +65,18 @@ export default class LandingPage extends Component {
           }
         </div>
         <div className="landing-page-store-list-container">
+          { this.testList && this.testList.map((store) => (
+            <StoreListItem
+              id={store.id}
+              title={store.name}
+              distance={store.distance}
+              key={store.id}
+              onClick={this.selectStore}
+            />
+          ))
+          }
         </div>
+        <p> {store && `You have selected: ${store.name} which is ${store.distance} meters away`} </p>
       </div>
     );
   }
