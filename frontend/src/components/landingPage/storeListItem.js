@@ -27,7 +27,7 @@ class StoreListItem extends PureComponent {
             {title}
           </p>
           <p className="landing-page__storeSearch-list-item-distance">
-            {distance}
+            {`${distance}m`}
           </p>
         </div>
       </div>

@@ -16,9 +16,9 @@ export default function productLocatorReducer(state=initialState, action={}) {
     return { ...state, account };
   }
 
-  case actionTypes.SET_NEARBY_STORES: {
+  case actionTypes.SET_STORES: {
     const { stores } = payload;
-    return { ...state, stores };
+    return {...state, stores };
   }
 
   default: return state;
