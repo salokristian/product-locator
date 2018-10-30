@@ -15,7 +15,7 @@ export default class StoreLayoutPage extends Component {
   }
 
   getSvg() {
-    var floorsShelvesJson = {
+    const floorsShelvesJson = {
       'floors': [
         {
           'id': 1,
@@ -48,11 +48,11 @@ export default class StoreLayoutPage extends Component {
     };
 
     //generate svg for floor
-    var svg = '';
+    let svg = '';
    
-    var i;
-    var j;
-    var points = floorsShelvesJson['floors'][0]['points'];
+    let i;
+    let j;
+    const points = floorsShelvesJson['floors'][0]['points'];
     for (i = 0; i < points.length ; i++) {
       if (i+1 < points.length) {
         j = i + 1;
@@ -68,9 +68,9 @@ export default class StoreLayoutPage extends Component {
       svg += 'style="stroke:rgb(0,0,0);" />\n';
     }
 
-    //shelves
+    /* shelves
 
-    var shelves = floorsShelvesJson['shelves'];
+    let shelves = floorsShelvesJson['shelves'];
 
     for (i = 0; i < shelves.length; i++) {
       svg += '<rect ';
@@ -80,6 +80,7 @@ export default class StoreLayoutPage extends Component {
       svg += ' height = "' + shelves[i]['height'] + '"';
       svg += ' fill=blue />\n';
     }
+    */
     
 
     
@@ -95,13 +96,59 @@ export default class StoreLayoutPage extends Component {
 
 
   render() {
+    const fetched =  {
+      'floors': [
+        {
+          'id': 1,
+          'number': 1,
+          'description': 'First and only floor.',
+          'points': [[0, 0], [20, 0], [20, 20], [0, 20]],
+          'store': 1
+        }
+      ],
+      'shelves': [
+        {
+          'id': 1,
+          'x_location': 3,
+          'y_location': 4,
+          'width': 5,
+          'height': 1,
+          'floor': 1,
+          'type': 'shelf'
+        },
+        {
+          'id': 2,
+          'x_location': 10,
+          'y_location': 10,
+          'width': 2,
+          'height': 7,
+          'floor': 1,
+          'type': 'shelf'
+        }
+      ]
+    };
+    const shelvesStyle = {
+      fill: 'blue',
+    };
+
     return (
       <div className="store-layout-page">
-        <div className="product-search-bar">
-        search bar
-        </div>
-        <div className="store-layout">
-          {this.getSvg()}
+        <div className="2nd-svg">
+          <svg width="20" height="20" viewBox="0 0 20 20">
+            {this.getSvg()}
+            {fetched.shelves && fetched.shelves.map((shelf) => (
+              <rect
+                x={shelf.x_location}
+                y={shelf.y_location}
+                width={shelf.width}
+                height={shelf.height}
+                style={shelvesStyle}
+              />
+            ))}
+          </svg>
+          <div className="product-search-bar">
+            search bar
+          </div>
         </div>
       </div>
     );

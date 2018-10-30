@@ -15,7 +15,7 @@ export default class backendApi extends Component {
   getFloorsAndShelves(storeId) {
 
 
-    var data = {
+    let data = {
       'floors': [
         {
           'id': 1,
