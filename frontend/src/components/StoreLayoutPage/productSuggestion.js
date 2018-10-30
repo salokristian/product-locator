@@ -25,7 +25,9 @@ const getSuggestions = value => {
 };
 
 
-
+const addToCart = (event) => {
+  console.log(event);
+};
 // When suggestion is clicked, Autosuggest needs to populate the input
 // based on the clicked suggestion. Teach Autosuggest how to calculate the
 // input value for every given suggestion.
@@ -33,8 +35,13 @@ const getSuggestionValue = suggestion => suggestion.name;
 
 // Use your imagination to render suggestions.
 const renderSuggestion = suggestion => (
-  <div>
-    {suggestion.name}
+  <div className="product-search-suggestion">
+    <div className="product-search-suggestion-name">
+      {suggestion.name}
+    </div>
+    <button className="product-search-suggestion-add-to-cart" onClick={addToCart}>
+      Add to cart
+    </button>
   </div>
 );
 
