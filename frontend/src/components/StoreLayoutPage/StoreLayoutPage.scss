@@ -6,11 +6,17 @@
   }
 .store-layout {
     width: 100%;
-    position: fixed;    
+    position: absolute;    
     top:0;
     left:0;
     height:100%;
     width: 100%;
+}
+
+.product-search-bar {
+    margin-top: 50px;
+    margin-left: 40%;
+    position: absolute;
 }
 
 
