@@ -174,7 +174,7 @@ class ProductInfo(models.Model):
         return '{}, {}'.format(self.name, self.brand)
 
 
-class ShoppingList():
+class ShoppingList(models.Model):
     '''A model for storing data about a customer's shopping list.'''
     name = models.CharField(max_length=255)
     description = models.TextField()
@@ -186,7 +186,7 @@ class ShoppingList():
         'shoppings_lists'
     )
     creator = models.ForeignKey(
-        'user.Customer',
+        'users.Customer',
         models.CASCADE,
         'shoppings_lists'
     )
