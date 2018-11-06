@@ -151,7 +151,12 @@ class ProductType(models.Model):
 
 
 class ProductInfo(models.Model):
-    '''A model for storing products' static information which is the same in all stores.'''
+    '''
+    A model for storing products' static information which is the same in all stores.
+
+    Data about actual products in stores with prices and shelf locations is in model Product,
+    which is referenced by field `products`.
+    '''
     name = models.CharField(max_length=255)
     brand = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -164,7 +169,7 @@ class ProductInfo(models.Model):
         models.PROTECT,
         'products'
     )
-    shelves = models.ManyToManyField(
+    products = models.ManyToManyField(
         Shelf,
         'products',
         through=Product
