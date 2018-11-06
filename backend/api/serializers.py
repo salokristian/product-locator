@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from api.models import Store, Floor, Shelf
+from api.models import Store, Floor, Shelf, Product, ProductInfo
 
 
 class ShelfSerializer(serializers.ModelSerializer):
@@ -28,3 +28,19 @@ class NestedStoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Store
         fields = ('id', 'name', 'description', 'location', 'phone', 'floors')
+
+
+class BasicProductInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductInfo
+        fields = ('id', 'name', 'brand', 'description',
+                  'image', 'weight', 'volume', 'type')
+
+
+class ProductSerializer(serializers.ModelSerializer):
+    product_info = BasicProductInfoSerializer(read_only=True)
+
+    class Meta:
+        model = Product
+        fields = ('id', 'price', 'on_discount', 'discount_price',
+                  'instock', 'shelf', 'product_info')
