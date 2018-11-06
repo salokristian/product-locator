@@ -57,7 +57,7 @@ class Floor(models.Model):
     )
 
     def __str__(self):
-        return str(self.number)
+        return '{}. floor, {}'.format(self.number, self.store)
 
 
 class Shelf(models.Model):
@@ -100,11 +100,12 @@ class Shelf(models.Model):
         verbose_name_plural = 'shelves'
 
     def __str__(self):
-        return '({},{})cm {}cm x {}cm'.format(
+        return 'x={}cm, y={}cm; {}cm x {}cm. {}'.format(
             self.x_location,
             self.y_location,
             self.width,
-            self.height
+            self.height,
+            self.floor
         )
 
 
@@ -136,7 +137,7 @@ class Product(models.Model):
     )
 
     def __str__(self):
-        return '{} in shelf {}'.format(self.product_info, self.shelf)
+        return '{}. In shelf {}'.format(self.product_info, self.shelf)
 
 
 class ProductType(models.Model):
