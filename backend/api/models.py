@@ -164,7 +164,7 @@ class ProductInfo(models.Model):
         models.PROTECT,
         'products'
     )
-    stores = models.ManyToManyField(
+    shelves = models.ManyToManyField(
         Shelf,
         'products',
         through=Product
