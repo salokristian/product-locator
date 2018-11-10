@@ -1,45 +1,38 @@
-
-import React, { Component, PureComponent } from 'react';
-import ReactAutosuggest from 'react-autosuggest';
-// Imagine you have a list of languages that you'd like to autosuggest.
-const languages = [
-  {
-    name: 'C',
-    year: 1972
-  },
-  {
-    name: 'Elm',
-    year: 2012
-  },
-  
-];
-
-// Teach Autosuggest how to calculate suggestions for any given input value.
-const getSuggestions = value => {
-  const inputValue = value.trim().toLowerCase();
-  const inputLength = inputValue.length;
-
-  return inputLength === 0 ? [] : languages.filter(lang =>
-    lang.name.toLowerCase().slice(0, inputLength) === inputValue
-  );
-};
+import React, { Component } from "react";
+import ReactAutosuggest from "react-autosuggest";
 
 
-const addToCart = (event) => {
-  console.log(event);
+
+const handleSuggestionClick = (suggestion) => {
+  //draw on map
+  console.log(suggestion);
+
+  let shelfId = suggestion['shelf'];
+
+  //TODO: info parent componentille, että 'suggestion' piirretävä kartalle!
+
+
+
+
+}
+
+const addToCart = (suggestion) => {
+  console.log('addToCart');
+
 };
 // When suggestion is clicked, Autosuggest needs to populate the input
 // based on the clicked suggestion. Teach Autosuggest how to calculate the
 // input value for every given suggestion.
-const getSuggestionValue = suggestion => suggestion.name;
+const getSuggestionValue = suggestion => suggestion['product_info']['name'];
 
 // Use your imagination to render suggestions.
 const renderSuggestion = suggestion => (
-  <div className="product-search-suggestion">
-    <div className="product-search-suggestion-name">
-      {suggestion.name}
-    </div>
-    <button className="product-search-suggestion-add-to-cart" onClick={addToCart}>
+  <div className="product-search-suggestion" onClick={handleSuggestionClick({suggestion})}>
+    <div className="product-search-suggestion-name">{suggestion['product_info']['name']}</div>
+    <button
+      className="product-search-suggestion-add-to-cart"
+      onClick={addToCart({suggestion})}
+    >
       Add to cart
     </button>
   </div>
@@ -50,11 +43,11 @@ export default class SearchBar extends Component {
     super();
     this.state = {
       value: '',
-      suggestions: ['pekka', 'esko', 'jarkko'],
+      suggestions: [],
+      storeId: 999
     };
   }
   onChange = (event, { newValue }) => {
-    console.log('here');
     this.setState({
       value: newValue
     });
@@ -63,10 +56,24 @@ export default class SearchBar extends Component {
   // Autosuggest will call this function every time you need to update suggestions.
   // You already implemented this logic above (???), so just use it.
   onSuggestionsFetchRequested = ({ value }) => {
-    console.log("onSuggestionsFetchRequested");
-    this.setState({
-      suggestions: getSuggestions(value)
-    });
+    let fetchUrl = "http://localhost:8000/stores/1/products?search=" + value;
+
+    fetch(fetchUrl)
+      .then(response => response.json())
+      .then(data => {
+        // console.log(data);
+        let productArray = [];
+
+        for (let key in data) {
+          if (data.hasOwnProperty(key)) {
+            productArray.push(data[key]);
+          }
+        }
+
+        this.setState({
+          suggestions: productArray
+        });
+      });
   };
 
   // Autosuggest will call this function every time you need to clear suggestions.
@@ -77,15 +84,15 @@ export default class SearchBar extends Component {
   };
 
   render() {
-    const {value, suggestions} = this.state;
+    const { value, suggestions } = this.state;
 
     const inputProps = {
-      placeholder: 'Type a product',
+      placeholder: "Type a product",
       value,
       onChange: this.onChange
     };
 
-    return(
+    return (
       <ReactAutosuggest
         suggestions={suggestions}
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
@@ -95,7 +102,5 @@ export default class SearchBar extends Component {
         inputProps={inputProps}
       />
     );
-
   }
-
 }

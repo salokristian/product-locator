@@ -14,5 +14,10 @@ RUN pip install pipenv
 COPY ./Pipfile /code/Pipfile
 RUN pipenv install --deploy --system --skip-lock --dev
 
+
+# CORS
+ADD requirements.txt /code/
+RUN pip install -r requirements.txt
+
 # Copy project
 COPY . /code/

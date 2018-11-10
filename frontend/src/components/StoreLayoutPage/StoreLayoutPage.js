@@ -6,53 +6,69 @@ export default class StoreLayoutPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      // TODO: mitä state-infoa tarvitsee? tallennanko ylimpään komponenttiin mahd.paljon?
-      // Joo? Eli tähän? Siis ainakin jo etsityt tuotteet mistä pingi kartalla.
-      storeId: 999999,
       locatedProducts: [],
 
     };
   }
+  // temp solution for getting store data to StoreLayoutPage component -- TODO some redux magic or somethiing.
+  UNSAFE_componentWillMount() {
+    fetch('http://localhost:8000/stores/1')
+      .then(response => response.json())
+      .then(data =>  {
+        console.log(data);
+        this.setState({
+          storeData: data
+        });
+      });
+  }
 
-  getSvg() {
-    const floorsShelvesJson = {
-      'floors': [
-        {
-          'id': 1,
-          'number': 1,
-          'description': 'First and only floor.',
-          'points': [[0, 0], [20, 0], [20, 20], [0, 20]],
-          'store': 1
-        }
-      ],
-      'shelves': [
-        {
-          'id': 1,
-          'x_location': 3,
-          'y_location': 4,
-          'width': 5,
-          'height': 1,
-          'floor': 1,
-          'type': 'shelf'
-        },
-        {
-          'id': 2,
-          'x_location': 10,
-          'y_location': 10,
-          'width': 2,
-          'height': 7,
-          'floor': 1,
-          'type': 'shelf'
-        }
-      ]
-    };
+  getBoarders() {
+    // const floorsShelvesJson = {
+    //   'floors': [
+    //     {
+    //       'id': 1,
+    //       'number': 1,
+    //       'description': 'First and only floor.',
+    //       'points': [[0, 0], [20, 0], [20, 20], [0, 20]],
+    //       'store': 1
+    //     }
+    //   ],
+    //   'shelves': [
+    //     {
+    //       'id': 1,
+    //       'x_location': 3,
+    //       'y_location': 4,
+    //       'width': 5,
+    //       'height': 1,
+    //       'floor': 1,
+    //       'type': 'shelf'
+    //     },
+    //     {
+    //       'id': 2,
+    //       'x_location': 10,
+    //       'y_location': 10,
+    //       'width': 2,
+    //       'height': 7,
+    //       'floor': 1,
+    //       'type': 'shelf'
+    //     }
+    //   ]
+    // };
 
     //generate svg for floor
     let svg = [];
    
     let i;
     let j;
-    const points = floorsShelvesJson['floors'][0]['points'];
+
+    //assuming has just one floor for now    
+    let points = [];
+    if (this.state.storeData != null) {
+      console.log("getsvg: " + this.state.storeData["name"]);
+      points = this.state.storeData['floors'][0]['points'];
+    }
+    
+    
     for (i = 0; i < points.length ; i++) {
       if (i+1 < points.length) {
         j = i + 1;
@@ -68,46 +84,17 @@ export default class StoreLayoutPage extends Component {
       });
     }
     return svg;
-
-
-
-
-
   }
 
-
   render() {
-    const fetched =  {
-      'floors': [
-        {
-          'id': 1,
-          'number': 1,
-          'description': 'First and only floor.',
-          'points': [[0, 0], [20, 0], [20, 20], [0, 20]],
-          'store': 1
-        }
-      ],
-      'shelves': [
-        {
-          'id': 1,
-          'x_location': 3,
-          'y_location': 4,
-          'width': 5,
-          'height': 1,
-          'floor': 1,
-          'type': 'shelf'
-        },
-        {
-          'id': 2,
-          'x_location': 10,
-          'y_location': 10,
-          'width': 2,
-          'height': 7,
-          'floor': 1,
-          'type': 'shelf'
-        }
-      ]
-    };
+    
+    //toimii nyt, mutta oikeesti renderöi kahdesti, vaikka ComponentWillMount kanssa ei mun mielestä pitäisi..
+    let shelves = [];
+    if (this.state.storeData != null) {
+      shelves = this.state.storeData['floors'][0]['shelves'];
+      console.log('shelves: ' + shelves);
+    }
+
     const shelvesStyle = {
       fill: 'blue',
     };
@@ -116,12 +103,12 @@ export default class StoreLayoutPage extends Component {
       stroke: 'rgb(0,0,0)',
     };
 
-    const borders = this.getSvg();
+    const borders = this.getBoarders();
 
     return (
       <div className="store-layout-page">
         <div className="2nd-svg">
-          <svg width="20" height="20" viewBox="0 0 20 20">
+          <svg width="2000" height="2000" viewBox="0 0 2000 2000">
             {borders && borders.length > 0 && borders.map((border) => (
               <line
                 x1={border.x1}
@@ -131,7 +118,7 @@ export default class StoreLayoutPage extends Component {
                 style={borderStyle}
               />
             ))}
-            {fetched.shelves && fetched.shelves.map((shelf) => (
+            {shelves && shelves.map((shelf) => (
               <rect
                 x={shelf.x_location}
                 y={shelf.y_location}
@@ -142,41 +129,10 @@ export default class StoreLayoutPage extends Component {
             ))}
           </svg>
           <div className="product-search-bar">
-            <SearchBar/>
+            <SearchBar storeId={this.state.storeId} />
           </div>
         </div>
       </div>
     );
   }
 }
-
-
-
-// // ProductSearchBar
-// export class ProductSearchBar extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.state = {
-//     };
-//   }
-// }
-
-
-// StoreLayout
-
-
-// class StoreLayout extends Component {
-//   renderSvg() {
-
-//   }
-//   render() {
-//     return (
-//       this.renderSvg()
-//     );
-//   }
-// }
-
-
-// Muita (statless function()?) tai classeja? esim. MapPage ainoa missä state, lisäksi function StoreLayout ja function SearchBar ?
-
-
