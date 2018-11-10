@@ -7,6 +7,7 @@ export default class StoreLayoutPage extends Component {
     super(props);
     this.state = {
       locatedProducts: [],
+      storeData: undefined,
 
     };
   }
@@ -86,9 +87,22 @@ export default class StoreLayoutPage extends Component {
     return svg;
   }
 
+
+  handleSuggestionClick = (productData) => {
+    console.log("onSuggestionClick storeLayoutPage.js");
+    console.log(this.state.locatedProducts);
+
+    //push to this.state.locatedProducts all product info 
+    this.setState({
+      locatedProducts: [...this.state.locatedProducts, productData['suggestion']]
+    });
+
+  }
+
   render() {
     
     //toimii nyt, mutta oikeesti renderöi kahdesti, vaikka ComponentWillMount kanssa ei mun mielestä pitäisi..
+    //reunat (boarders) ja hyllyt (shelves) tulee nyt vammasesti eri paikoista, ihan hyvin vois olla molemmat vaikka täällä.
     let shelves = [];
     if (this.state.storeData != null) {
       shelves = this.state.storeData['floors'][0]['shelves'];
@@ -103,7 +117,9 @@ export default class StoreLayoutPage extends Component {
       stroke: 'rgb(0,0,0)',
     };
 
+
     const borders = this.getBoarders();
+    const locatedProducts = this.state.locatedProducts;
 
     return (
       <div className="store-layout-page">
@@ -127,9 +143,19 @@ export default class StoreLayoutPage extends Component {
                 style={shelvesStyle}
               />
             ))}
+            {locatedProducts && locatedProducts.map((product) => (
+              <circle
+              cx={shelves[product.shelf].x_location}
+              cy={shelves[product.shelf].y_location}
+              fill="red"
+              r="25"
+            />
+            ))}
           </svg>
           <div className="product-search-bar">
-            <SearchBar storeId={this.state.storeId} />
+            <SearchBar 
+              storeId={this.state.storeId}
+              handleSuggestionClick={this.handleSuggestionClick} />
           </div>
         </div>
       </div>

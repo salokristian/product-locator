@@ -3,21 +3,8 @@ import ReactAutosuggest from "react-autosuggest";
 
 
 
-const handleSuggestionClick = (suggestion) => {
-  //draw on map
-  console.log(suggestion);
-
-  let shelfId = suggestion['shelf'];
-
-  //TODO: info parent componentille, että 'suggestion' piirretävä kartalle!
-
-
-
-
-}
-
 const addToCart = (suggestion) => {
-  console.log('addToCart');
+  // console.log("add to cart") // miksi tämä triggeraa ennen clickia mouseoverilla
 
 };
 // When suggestion is clicked, Autosuggest needs to populate the input
@@ -25,18 +12,7 @@ const addToCart = (suggestion) => {
 // input value for every given suggestion.
 const getSuggestionValue = suggestion => suggestion['product_info']['name'];
 
-// Use your imagination to render suggestions.
-const renderSuggestion = suggestion => (
-  <div className="product-search-suggestion" onClick={handleSuggestionClick({suggestion})}>
-    <div className="product-search-suggestion-name">{suggestion['product_info']['name']}</div>
-    <button
-      className="product-search-suggestion-add-to-cart"
-      onClick={addToCart({suggestion})}
-    >
-      Add to cart
-    </button>
-  </div>
-);
+
 
 export default class SearchBar extends Component {
   constructor() {
@@ -83,6 +59,19 @@ export default class SearchBar extends Component {
     });
   };
 
+  // Use your imagination to render suggestions.
+  renderSuggestion = suggestion => (
+    <div className="product-search-suggestion" onClick={() => this.props.handleSuggestionClick({suggestion})}>
+      <div className="product-search-suggestion-name">{suggestion['product_info']['name']}</div>
+      <button
+        className="product-search-suggestion-add-to-cart"
+        onClick={() => addToCart({suggestion})}
+      >
+        Add to cart
+      </button>
+    </div>
+  );
+
   render() {
     const { value, suggestions } = this.state;
 
@@ -98,7 +87,7 @@ export default class SearchBar extends Component {
         onSuggestionsFetchRequested={this.onSuggestionsFetchRequested}
         onSuggestionsClearRequested={this.onSuggestionsClearRequested}
         getSuggestionValue={getSuggestionValue}
-        renderSuggestion={renderSuggestion}
+        renderSuggestion={this.renderSuggestion}
         inputProps={inputProps}
       />
     );
