@@ -10,6 +10,7 @@ djangorestframework = "*"
 "autopep8" = "<=1.4.0"
 "psycopg2" = "*"
 django-cors-headers = "*"
+djangorestframework-jwt = "*"
 
 [dev-packages]
 
