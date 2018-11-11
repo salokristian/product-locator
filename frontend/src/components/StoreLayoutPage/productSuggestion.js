@@ -40,7 +40,7 @@ const renderSuggestion = suggestion => (
       {suggestion.name}
     </div>
     <button className="product-search-suggestion-add-to-cart" onClick={addToCart}>
-      Add to cart
+      +
     </button>
   </div>
 );
@@ -50,7 +50,7 @@ export default class SearchBar extends Component {
     super();
     this.state = {
       value: '',
-      suggestions: ['pekka', 'esko', 'jarkko'],
+      suggestions: [],
     };
   }
   onChange = (event, { newValue }) => {

@@ -121,6 +121,9 @@ export default class StoreLayoutPage extends Component {
     return (
       <div className="store-layout-page">
         <div className="2nd-svg">
+          <div className="product-search-bar">
+            <SearchBar/>
+          </div>
           <svg width="20" height="20" viewBox="0 0 20 20">
             {borders && borders.length > 0 && borders.map((border) => (
               <line
@@ -141,9 +144,6 @@ export default class StoreLayoutPage extends Component {
               />
             ))}
           </svg>
-          <div className="product-search-bar">
-            <SearchBar/>
-          </div>
         </div>
       </div>
     );
