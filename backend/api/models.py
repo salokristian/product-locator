@@ -198,4 +198,4 @@ class ShoppingList(models.Model):
     )
 
     def __str__(self):
-        return '{} by {}'.format(self.name, self.cretor)
+        return '{} by {}'.format(self.name, self.creator)
