@@ -1,8 +1,8 @@
-from rest_framework import generics
+from rest_framework import generics, permissions
 
-from api.models import Store, Product
+from api.models import Store, Product, ShoppingList
 from api.serializers import (BasicStoreSerializer, NestedStoreSerializer,
-                             ProductSerializer)
+                             ProductSerializer, ShoppingListSerializer)
 
 
 class StoreList(generics.ListAPIView):
@@ -49,3 +49,18 @@ class ProductList(generics.ListAPIView):
             products = products.filter(product_info__name__icontains=product_name)
 
         return products
+
+
+class ShoppingListList(generics.ListAPIView):
+    """
+    List all user's shopping lists.
+    """
+    serializer_class = ShoppingListSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
+    def get_queryset(self):
+        user_pk = self.request.user.pk
+
+        shopping_lists = ShoppingList.objects.filter(creator=user_pk)
+
+        return shopping_lists
