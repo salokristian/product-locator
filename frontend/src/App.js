@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-// import LandingitgPage from './components/landingPage/landingPage';
+import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
+import LandingPage from './components/landingPage/landingPage';
 import StoreLayoutPage from './components/StoreLayoutPage/StoreLayoutPage';
 import './App.css';
 
@@ -7,10 +8,14 @@ import './App.css';
 class App extends Component {  
   render() {
     return (
-      <div className="App">
-        {/* <LandingPage /> */}
-        <StoreLayoutPage storeData />
-      </div>
+      <Router>
+        <div className="App">
+          <Switch>
+            <Route exact path="/" component={LandingPage} />
+            <Route path="/stores/:id" component={StoreLayoutPage} />
+          </Switch>
+        </div>
+      </Router>
     );
   }
 }

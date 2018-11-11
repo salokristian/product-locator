@@ -12,7 +12,9 @@ export default class StoreLayoutPage extends Component {
     };
   }
   // temp solution for getting store data to StoreLayoutPage component -- TODO some redux magic or somethiing.
-  UNSAFE_componentWillMount() {
+  componentDidMount() {
+    const { id } = this.props.match.params;
+    console.log(id);
     fetch('http://localhost:8000/stores/1')
       .then(response => response.json())
       .then(data =>  {
