@@ -51,16 +51,19 @@ class ProductList(generics.ListAPIView):
         return products
 
 
-class ShoppingListList(generics.ListAPIView):
+class ShoppingListList(generics.ListCreateAPIView):
     """
-    List all user's shopping lists.
+    List all user's shopping lists or create a new one.
     """
     serializer_class = ShoppingListSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_queryset(self):
         user_pk = self.request.user.pk
-
         shopping_lists = ShoppingList.objects.filter(creator=user_pk)
 
         return shopping_lists
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user.customer)
+

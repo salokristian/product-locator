@@ -60,6 +60,19 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 
             return BasicStoreSerializer(store).data
 
+    def validate_products(self, products):
+        """Check that all products belong to the same store."""
+        shelf_ids = [p.shelf.id for p in products]
+        store_count = Store.objects.filter(floors__shelves__id__in=shelf_ids).count()
+
+        if store_count != 1:
+            raise serializers.ValidationError('All products should belong to the same store.')
+        return products
+
     class Meta:
         model = ShoppingList
-        fields = ('id', 'name', 'description', 'created_at', 'modified_at', 'creator', 'store')
+        fields = ('id', 'name', 'description', 'created_at',
+                  'modified_at', 'creator', 'store', 'products')
+
+        # The creator field is read only because it is added in the view from JWT
+        read_only_fields = ('created_at', 'modified_at', 'creator', 'store')
