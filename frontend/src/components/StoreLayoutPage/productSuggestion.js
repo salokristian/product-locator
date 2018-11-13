@@ -32,7 +32,7 @@ export default class SearchBar extends Component {
   // Autosuggest will call this function every time you need to update suggestions.
   // You already implemented this logic above (???), so just use it.
   onSuggestionsFetchRequested = ({ value }) => {
-    let fetchUrl = "http://localhost:8000/stores/1/products?search=" + value;
+    let fetchUrl = "https://productlocator.herokuapp.com/" + value;
 
     fetch(fetchUrl)
       .then(response => response.json())

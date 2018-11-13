@@ -6,7 +6,7 @@ export default class StoreLayoutPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      locatedProducts: [],
+      locatedProduct: undefined,
       storeData: undefined,
 
     };
@@ -92,11 +92,11 @@ export default class StoreLayoutPage extends Component {
 
   handleSuggestionClick = (productData) => {
     console.log("onSuggestionClick storeLayoutPage.js");
-    console.log(this.state.locatedProducts);
+    console.log(this.state.locatedProduct);
 
     //push to this.state.locatedProducts all product info 
     this.setState({
-      locatedProducts: [...this.state.locatedProducts, productData['suggestion']]
+      locatedProducts: productData['suggestion']
     });
 
   }
@@ -121,7 +121,7 @@ export default class StoreLayoutPage extends Component {
 
 
     const borders = this.getBoarders();
-    const locatedProducts = this.state.locatedProducts;
+    const locatedProduct = this.state.locatedProduct;
 
     return (
       <div className="store-layout-page">
@@ -145,14 +145,14 @@ export default class StoreLayoutPage extends Component {
                 style={shelvesStyle}
               />
             ))}
-            {locatedProducts && locatedProducts.map((product) => (
+            {locatedProduct
               <circle
-              cx={shelves[product.shelf].x_location}
-              cy={shelves[product.shelf].y_location}
+              cx={shelves[locatedProduct.shelf].x_location}
+              cy={shelves[locatedProduct.shelf].y_location}
               fill="red"
               r="25"
             />
-            ))}
+            }
           </svg>
           <div className="product-search-bar">
             <SearchBar 

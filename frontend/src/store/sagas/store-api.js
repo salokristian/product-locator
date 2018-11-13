@@ -20,7 +20,7 @@ export async function getStoreList() {
   //   });
   // }
 
-  return fetch('http://localhost:8000/stores')
+  return fetch('https://productlocator.herokuapp.com/')
     .then(response => response.json())
     .then(data => {
 
