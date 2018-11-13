@@ -2,7 +2,8 @@ from rest_framework import generics, permissions
 
 from api.models import Store, Product, ShoppingList
 from api.serializers import (BasicStoreSerializer, NestedStoreSerializer,
-                             ProductSerializer, ShoppingListSerializer)
+                             ProductSerializer, ShoppingListSerializer,
+                             NestedShoppingListSerializer)
 import api.permissions as custom_perms
 
 
@@ -69,10 +70,10 @@ class ShoppingListList(generics.ListCreateAPIView):
         serializer.save(creator=self.request.user.customer)
 
 
-class ShoppingListDetail(generics.RetrieveUpdateDestroyAPIView):
+class ShoppingListDetail(generics.RetrieveDestroyAPIView):
     """
-    Get, modify or delete a user's shopping list.
+    Get or delete a user's shopping list.
     """
-    serializer_class = ShoppingListSerializer
+    serializer_class = NestedShoppingListSerializer
     permission_classes = (permissions.IsAuthenticated, custom_perms.IsCreator)
     queryset = ShoppingList

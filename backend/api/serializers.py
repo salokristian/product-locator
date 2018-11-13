@@ -48,7 +48,6 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ShoppingListSerializer(serializers.ModelSerializer):
     store = serializers.SerializerMethodField()
-    products = ProductSerializer(many=True, read_only=True)
 
     # TODO: Could be turned into a manager method
     def get_store(self, obj):
@@ -65,11 +64,35 @@ class ShoppingListSerializer(serializers.ModelSerializer):
         """Check that all products belong to the same store."""
         shelf_ids = [p.shelf.id for p in products]
         store_count = Store.objects.filter(
-            floors__shelves__id__in=shelf_ids).count().values('pk').distinct()
+            floors__shelves__id__in=shelf_ids).values('pk').distinct().count()
 
         if store_count != 1:
             raise serializers.ValidationError('All products should belong to the same store.')
         return products
+
+    class Meta:
+        model = ShoppingList
+        fields = ('id', 'name', 'description', 'created_at',
+                  'modified_at', 'creator', 'store', 'products')
+
+        # The creator field is read only because it is added in the view from JWT
+        read_only_fields = ('created_at', 'modified_at', 'creator', 'store')
+
+
+class NestedShoppingListSerializer(serializers.ModelSerializer):
+    store = serializers.SerializerMethodField()
+    products = ProductSerializer(many=True, read_only=True)
+
+    # TODO: Could be turned into a manager method
+    def get_store(self, obj):
+        """Get the store of the shopping list by looking at the products' location."""
+        products = obj.products.all()
+
+        if len(products) > 0:
+            shelf = products[0].shelf
+            store = Store.objects.get(floors__shelves__id=shelf.pk)
+
+            return BasicStoreSerializer(store).data
 
     class Meta:
         model = ShoppingList
