@@ -96,7 +96,7 @@ export default class StoreLayoutPage extends Component {
 
     //push to this.state.locatedProducts all product info 
     this.setState({
-      locatedProducts: productData['suggestion']
+      locatedProduct: productData['suggestion']
     });
 
   }
@@ -108,7 +108,7 @@ export default class StoreLayoutPage extends Component {
     let shelves = [];
     if (this.state.storeData != null) {
       shelves = this.state.storeData['floors'][0]['shelves'];
-      console.log('shelves: ' + shelves);
+      console.log(shelves);
     }
 
     const shelvesStyle = {
@@ -122,6 +122,25 @@ export default class StoreLayoutPage extends Component {
 
     const borders = this.getBoarders();
     const locatedProduct = this.state.locatedProduct;
+
+    const locatedProductShelfPosition = () => {
+      let x = 0;
+      // console.log("derp");
+      for (var i = 0; i < shelves.length; i++) {
+        // console.log("shelf" + shelves[i]);
+        // console.log("locatedprodshelf" + locatedProduct.shelf);
+        if (shelves[i].id == locatedProduct.shelf) {
+          // console.log("returned :" + x)
+          return x;
+        }
+        x++;
+        // console.log("x: ", x);
+      }
+    };
+    // const locatedProductShelfPosition = 1;
+    
+    
+    console.log("locatedProduct render() storelayoutpage.js : " + locatedProduct)
     
     if (this.state.storeData) {
       console.log("storeId @storelayoutpage: " + this.state.storeData.id);
@@ -150,13 +169,13 @@ export default class StoreLayoutPage extends Component {
                 style={shelvesStyle}
               />
             ))}
-            {locatedProduct && 
+            {locatedProduct && shelves[locatedProductShelfPosition()] &&
               <circle
-              cx={shelves[locatedProduct.shelf].x_location}
-              cy={shelves[locatedProduct.shelf].y_location}
-              fill="red"
-              r="25"
-            />
+                cx={shelves[locatedProductShelfPosition()].x_location}
+                cy={shelves[locatedProductShelfPosition()].y_location}
+                fill="red"
+                r="25"
+              />
             }
           </svg>
           {this.state.storeData && this.state.storeData.id &&
