@@ -15,7 +15,7 @@ export default class StoreLayoutPage extends Component {
   componentDidMount() {
     const { id } = this.props.match.params;
     console.log(id);
-    fetch('http://localhost:8000/stores/' + id)
+    fetch('https://productlocator.herokuapp.com/stores/' + id)
       .then(response => response.json())
       .then(data =>  {
         console.log(data);
@@ -122,6 +122,11 @@ export default class StoreLayoutPage extends Component {
 
     const borders = this.getBoarders();
     const locatedProduct = this.state.locatedProduct;
+    
+    if (this.state.storeData) {
+      console.log("storeId @storelayoutpage: " + this.state.storeData.id);
+
+    }
 
     return (
       <div className="store-layout-page">
@@ -145,7 +150,7 @@ export default class StoreLayoutPage extends Component {
                 style={shelvesStyle}
               />
             ))}
-            {locatedProduct
+            {locatedProduct && 
               <circle
               cx={shelves[locatedProduct.shelf].x_location}
               cy={shelves[locatedProduct.shelf].y_location}
@@ -154,11 +159,14 @@ export default class StoreLayoutPage extends Component {
             />
             }
           </svg>
+          {this.state.storeData && this.state.storeData.id &&
           <div className="product-search-bar">
             <SearchBar 
-              storeId={this.state.storeId}
+              storeId={this.state.storeData.id}
               handleSuggestionClick={this.handleSuggestionClick} />
           </div>
+          }
+          
         </div>
       </div>
     );

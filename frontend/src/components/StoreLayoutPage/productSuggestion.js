@@ -19,8 +19,7 @@ export default class SearchBar extends Component {
     super();
     this.state = {
       value: '',
-      suggestions: [],
-      storeId: 999
+      suggestions: []
     };
   }
   onChange = (event, { newValue }) => {
@@ -32,7 +31,13 @@ export default class SearchBar extends Component {
   // Autosuggest will call this function every time you need to update suggestions.
   // You already implemented this logic above (???), so just use it.
   onSuggestionsFetchRequested = ({ value }) => {
-    let fetchUrl = "https://productlocator.herokuapp.com/" + value;
+    
+    
+    // const storeId = "1";
+    let fetchUrl = "https://productlocator.herokuapp.com/stores/" + this.props.storeId + "/products?search=" + value;
+
+    console.log("productsuggestion storeId: " +  this.props.storeId);
+
 
     fetch(fetchUrl)
       .then(response => response.json())
