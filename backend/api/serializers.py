@@ -78,3 +78,37 @@ class ShoppingListSerializer(serializers.ModelSerializer):
 
         # The creator field is read only because it is added in the view from JWT
         read_only_fields = ('created_at', 'modified_at', 'creator', 'store')
+
+
+class ShoppingListDetailSerializer(serializers.ModelSerializer):
+    """This is a horrible hack to fetch a lot of nested data. Works, but should be fixed. """
+    class NestedProductSerializer(serializers.ModelSerializer):
+
+        class NestedShelfSerializer(serializers.ModelSerializer):
+
+            class FloorSerializer(serializers.ModelSerializer):
+                class Meta:
+                    model = Floor
+                    fields = ('id', 'points', 'entrances', 'checkouts')
+
+            floor = FloorSerializer(read_only=True)
+
+            class Meta:
+                model = Shelf
+                fields = ('id', 'type', 'x_location', 'y_location',
+                          'width', 'height', 'product_side', 'floor')
+
+        product_info = BasicProductInfoSerializer(read_only=True)
+        shelf = NestedShelfSerializer(read_only=True)
+
+        class Meta:
+            model = Product
+            fields = ('id', 'price', 'on_discount', 'discount_price',
+                      'instock', 'shelf', 'product_info')
+
+    products = NestedProductSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ShoppingList
+        fields = ('id', 'name', 'description', 'created_at',
+                  'modified_at', 'creator', 'products')

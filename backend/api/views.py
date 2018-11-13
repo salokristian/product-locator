@@ -1,9 +1,12 @@
-from rest_framework import generics, permissions
+from rest_framework import generics, permissions, views, response, renderers
+from django.shortcuts import get_object_or_404
 
 from api.models import Store, Product, ShoppingList
 from api.serializers import (BasicStoreSerializer, NestedStoreSerializer,
-                             ProductSerializer, ShoppingListSerializer)
+                             ProductSerializer, ShoppingListSerializer,
+                             ShoppingListDetailSerializer)
 import api.permissions as custom_perms
+import api.pathfinding.route as route
 
 
 class StoreList(generics.ListAPIView):
@@ -76,3 +79,27 @@ class ShoppingListDetail(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ShoppingListSerializer
     permission_classes = (permissions.IsAuthenticated, custom_perms.IsCreator)
     queryset = ShoppingList
+
+
+class ShoppingListRoute(views.APIView):
+    """
+    Get the optimal route for fetching all the products in a shopping list.
+    """
+    permission_classes = (permissions.IsAuthenticated, custom_perms.IsCreator)
+
+    # TODO: Kutsu has_object_perms
+
+    def get(self, request, *args, **kwargs):
+        params = {'pk': kwargs['pk']}
+
+        shopping_list = get_object_or_404(ShoppingList, **params)
+        self.check_object_permissions(request, shopping_list)
+        serialized_shopping_list = ShoppingListDetailSerializer(shopping_list).data
+
+        shelves = [product['shelf'] for product in serialized_shopping_list['products']]
+        floor = serialized_shopping_list['products'][0]['shelf']['floor']
+
+        opt_route = get_optimal_route(shelves, floor)
+        print(floor)
+        # dict.pop()
+        return response.Response(serialized_shopping_list)
