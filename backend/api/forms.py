@@ -12,4 +12,4 @@ class FloorForm(forms.ModelForm):
             delimiter='|'
         ),
         help_text="""Separate nested arrays with a comma "," and elements in the
-nested arrays by a pipe "|". E.g. "0,0 | 10,0 | 10,10 | 0,10\".""")
+nested arrays by a pipe "|". E.g. "0|0 , 10|0 , 10|10 , 0|10\".""")
