@@ -15,7 +15,7 @@ export default class StoreLayoutPage extends Component {
   componentDidMount() {
     const { id } = this.props.match.params;
     console.log(id);
-    fetch('http://localhost:8000/stores/1')
+    fetch('http://localhost:8000/stores/' + id)
       .then(response => response.json())
       .then(data =>  {
         console.log(data);
