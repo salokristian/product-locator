@@ -1,0 +1,44 @@
+.store-layout-page {
+    margin: 10px;
+    width: 100%;
+    height: 100%;
+    // display: flex;
+}
+.store-layout {
+    width: 100%;
+    position: absolute;    
+    top:0;
+    left:0;
+    height:100%;
+    width: 100%;
+}
+
+.product-search-bar {
+    margin-top: 50px;
+    margin-left: 40%;
+    position: absolute;
+}
+
+.react-autosuggest__suggestions-list {
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+}
+svg { position:fixed; top:0; left:0; height:100%; width:100% }
+
+.product-search-suggestion {
+    display: inline-flex;
+    justify-content: space-between;
+    border: 1px solid grey;
+    width: 100%;
+}
+
+.product-search-suggestion-name {
+    display: inline-block;
+}
+
+.product-search-suggestion-add-to-cart {
+    display: inline-block;
+    float: right;
+}
+

@@ -1,0 +1,28 @@
+{
+  "products": [
+    {
+      "id": 1,
+      "name": "1 maito",
+      "brand": "Pirkka",
+      "description": "Laatumaitoa.",
+      "image": "https://public.keskofiles.com/f/k-ruoka/product/6410405082626?w=800&h=500&fm=jpg&q=90&fit=clip&bg=fff",
+      "weight": 1,
+      "volume": 1,
+      "instock": 100,
+      "shelf": 1,
+      "price": 0.5
+    },
+    {
+      "id": 2,
+      "name": "Tomaattimurska",
+      "brand": "Pirkka",
+      "description": "Tuoreista tomaateista.",
+      "image": "https://public.keskofiles.com/f/k-ruoka/product/6410405073020?w=800&h=500&fm=jpg&q=90&fit=clip&bg=fff",
+      "weight": 0.3,
+      "volume": 0.2,
+      "instock": 50,
+      "shelf": 2,
+      "price": 3
+    }
+  ]
+  }
