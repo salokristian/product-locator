@@ -40,12 +40,23 @@ class Floor(models.Model):
     '''
     A model for describing a floor in a store.
 
-    ``points`` is an array containing [x_point, y_point] arrays, which limit the floor's area.
+    `points`, `entrances` and `checkouts` are arrays containing [x_point, y_point] arrays.
+    They represent the area, entrance points, and cashier points, respectively.
     The unit of these coordinates is centimeters.
     '''
     number = models.IntegerField()
     description = models.TextField(blank=True)
     points = ArrayField(
+        ArrayField(
+            models.PositiveIntegerField(),
+            size=2)
+    )
+    entrances = ArrayField(
+        ArrayField(
+            models.PositiveIntegerField(),
+            size=2)
+    )
+    checkouts = ArrayField(
         ArrayField(
             models.PositiveIntegerField(),
             size=2)
@@ -65,6 +76,8 @@ class Shelf(models.Model):
     A model for a shelf in a floor.
 
     The ``x_location``, ``y_location``, ``width`` and ``height`` fields are in centimeters.
+    The `product_side` field determines the side of the shelf that has the products. The
+    sides are listed in clock-wise order starting from the given `[x_location, y_location]`.
     '''
     SHELF = 'SHELF'
     BIN = 'BIN'
@@ -78,6 +91,18 @@ class Shelf(models.Model):
         (FREEZER, 'Freezer')
     )
 
+    FIRST = 1
+    SECOND = 2
+    THIRD = 3
+    FOURTH = 4
+
+    PRODUCT_SIDE_CHOICES = (
+        (FIRST, 'First side (clock-wise)'),
+        (SECOND, 'Second side (clock-wise)'),
+        (THIRD, 'Third side (clock-wise)'),
+        (FOURTH, 'Fourth side (clock-wise)')
+    )
+
     type = models.CharField(
         max_length=255,
         choices=TYPE_CHOICES,
@@ -88,6 +113,7 @@ class Shelf(models.Model):
     y_location = models.PositiveIntegerField()
     width = models.PositiveIntegerField()
     height = models.PositiveIntegerField()
+    product_side = models.PositiveSmallIntegerField(choices=PRODUCT_SIDE_CHOICES)
 
     floor = models.ForeignKey(
         Floor,

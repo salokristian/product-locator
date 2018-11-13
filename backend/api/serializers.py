@@ -5,7 +5,8 @@ from api.models import Store, Floor, Shelf, Product, ProductInfo, ShoppingList
 class ShelfSerializer(serializers.ModelSerializer):
     class Meta:
         model = Shelf
-        fields = ('id', 'type', 'x_location', 'y_location', 'width', 'height', 'floor')
+        fields = ('id', 'type', 'x_location', 'y_location',
+                  'width', 'height', 'product_side', 'floor')
 
 
 class FloorSerializer(serializers.ModelSerializer):
@@ -13,7 +14,8 @@ class FloorSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Floor
-        fields = ('id', 'number', 'description', 'points', 'store', 'shelves')
+        fields = ('id', 'number', 'description', 'points',
+                  'entrances', 'checkouts', 'store', 'shelves')
 
 
 class BasicStoreSerializer(serializers.ModelSerializer):
