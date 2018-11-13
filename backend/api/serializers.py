@@ -48,6 +48,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ShoppingListSerializer(serializers.ModelSerializer):
     store = serializers.SerializerMethodField()
+    products = ProductSerializer(many=True, read_only=True)
 
     # TODO: Could be turned into a manager method
     def get_store(self, obj):
@@ -63,7 +64,8 @@ class ShoppingListSerializer(serializers.ModelSerializer):
     def validate_products(self, products):
         """Check that all products belong to the same store."""
         shelf_ids = [p.shelf.id for p in products]
-        store_count = Store.objects.filter(floors__shelves__id__in=shelf_ids).count()
+        store_count = Store.objects.filter(
+            floors__shelves__id__in=shelf_ids).count().values('pk').distinct()
 
         if store_count != 1:
             raise serializers.ValidationError('All products should belong to the same store.')
