@@ -2,12 +2,33 @@ import React, { Component } from 'react';
 import SearchBar from './productSuggestion';
 import './StoreLayoutPage.scss';
 
+
+
+//haetun tuotteen infolaatikko 
+function ProductInfo(props) {
+  if (props) {
+    console.log(props.productInfo);
+    let productInfo = props.productInfo;
+    let listItems = [];
+    listItems.push(<li>{'Name: ' + productInfo.name}</li>);
+    listItems.push(<li>{'Brand: ' + productInfo.brand}</li>);
+    listItems.push(<li>{'Description: ' + productInfo.description}</li>);
+
+    return (
+      <ul>{listItems}</ul>
+    );
+  }
+}
+
+//kauppakartta
 export default class StoreLayoutPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
       locatedProduct: undefined,
       storeData: undefined,
+      locatedProductInfoVisible: true,
+
 
     };
   }
@@ -101,6 +122,7 @@ export default class StoreLayoutPage extends Component {
 
   }
 
+
   render() {
     
     //toimii nyt, mutta oikeesti renderöi kahdesti, vaikka ComponentWillMount kanssa ei mun mielestä pitäisi..
@@ -122,31 +144,30 @@ export default class StoreLayoutPage extends Component {
 
     const borders = this.getBoarders();
     const locatedProduct = this.state.locatedProduct;
+    console.log(this.state.locatedProduct);
 
     const locatedProductShelfPosition = () => {
-      let x = 0;
-      // console.log("derp");
-      for (var i = 0; i < shelves.length; i++) {
-        // console.log("shelf" + shelves[i]);
-        // console.log("locatedprodshelf" + locatedProduct.shelf);
+      let i = 0;
+      for (i = 0; i < shelves.length; i++) {
         if (shelves[i].id == locatedProduct.shelf) {
-          // console.log("returned :" + x)
-          return x;
+          return i;
         }
-        x++;
-        // console.log("x: ", x);
       }
-    };
-    // const locatedProductShelfPosition = 1;
-    
-    
-    console.log("locatedProduct render() storelayoutpage.js : " + locatedProduct)
-    
-    if (this.state.storeData) {
-      console.log("storeId @storelayoutpage: " + this.state.storeData.id);
+    }; 
+    const getLocatedProductLocation = (axis) => {
+      let i = locatedProductShelfPosition();
+      if (axis == 'x') {
+        let cx = shelves[i].x_location;
+        cx += shelves[i].width*0.5;
+        return cx;
+      }
+      if (axis == 'y') {
+        let cy = shelves[i].y_location;
+        cy += shelves[i].height*0.5;
+        return cy;
+      }
 
-    }
-
+    };  
     return (
       <div className="store-layout-page">
         <div className="2nd-svg">
@@ -171,8 +192,10 @@ export default class StoreLayoutPage extends Component {
             ))}
             {locatedProduct && shelves[locatedProductShelfPosition()] &&
               <circle
-                cx={shelves[locatedProductShelfPosition()].x_location}
-                cy={shelves[locatedProductShelfPosition()].y_location}
+                // cx={shelves[locatedProductShelfPosition()].x_location}
+                // cy={shelves[locatedProductShelfPosition()].y_location}
+                cx = {getLocatedProductLocation('x')}
+                cy = {getLocatedProductLocation('y')}
                 fill="red"
                 r="25"
               />
@@ -184,6 +207,12 @@ export default class StoreLayoutPage extends Component {
               storeId={this.state.storeData.id}
               handleSuggestionClick={this.handleSuggestionClick} />
           </div>
+          }
+          {this.state.locatedProduct && this.state.locatedProductInfoVisible &&
+          <div className="located-product-info">
+            <ProductInfo productInfo={this.state.locatedProduct.product_info} />
+          </div>
+        
           }
           
         </div>
