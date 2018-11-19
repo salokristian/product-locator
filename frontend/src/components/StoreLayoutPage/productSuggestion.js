@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import ReactAutosuggest from "react-autosuggest";
+import React, { Component } from 'react';
+import ReactAutosuggest from 'react-autosuggest';
 
 
 
@@ -34,9 +34,9 @@ export default class SearchBar extends Component {
     
     
     // const storeId = "1";
-    let fetchUrl = "https://productlocator.herokuapp.com/stores/" + this.props.storeId + "/products?search=" + value;
+    let fetchUrl = 'https://productlocator.herokuapp.com/api/stores/' + this.props.storeId + '/products?search=' + value;
 
-    console.log("productsuggestion storeId: " +  this.props.storeId);
+    console.log('productsuggestion storeId: ' +  this.props.storeId);
 
 
     fetch(fetchUrl)
@@ -81,7 +81,7 @@ export default class SearchBar extends Component {
     const { value, suggestions } = this.state;
 
     const inputProps = {
-      placeholder: "Type a product",
+      placeholder: 'Type a product',
       value,
       onChange: this.onChange
     };

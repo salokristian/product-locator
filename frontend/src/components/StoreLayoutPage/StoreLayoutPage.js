@@ -15,7 +15,7 @@ export default class StoreLayoutPage extends Component {
   componentDidMount() {
     const { id } = this.props.match.params;
     console.log(id);
-    fetch('https://productlocator.herokuapp.com/stores/' + id)
+    fetch('https://productlocator.herokuapp.com/api/stores/' + id)
       .then(response => response.json())
       .then(data =>  {
         console.log(data);
@@ -67,7 +67,7 @@ export default class StoreLayoutPage extends Component {
     //assuming has just one floor for now    
     let points = [];
     if (this.state.storeData != null) {
-      console.log("getsvg: " + this.state.storeData["name"]);
+      console.log('getsvg: ' + this.state.storeData['name']);
       points = this.state.storeData['floors'][0]['points'];
     }
     
@@ -91,7 +91,7 @@ export default class StoreLayoutPage extends Component {
 
 
   handleSuggestionClick = (productData) => {
-    console.log("onSuggestionClick storeLayoutPage.js");
+    console.log('onSuggestionClick storeLayoutPage.js');
     console.log(this.state.locatedProduct);
 
     //push to this.state.locatedProducts all product info 
@@ -140,10 +140,10 @@ export default class StoreLayoutPage extends Component {
     // const locatedProductShelfPosition = 1;
     
     
-    console.log("locatedProduct render() storelayoutpage.js : " + locatedProduct)
+    console.log('locatedProduct render() storelayoutpage.js : ' + locatedProduct);
     
     if (this.state.storeData) {
-      console.log("storeId @storelayoutpage: " + this.state.storeData.id);
+      console.log('storeId @storelayoutpage: ' + this.state.storeData.id);
 
     }
 
