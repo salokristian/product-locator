@@ -7,14 +7,15 @@ import './StoreLayoutPage.scss';
 //haetun tuotteen infolaatikko 
 function ProductInfo(props) {
   if (props) {
-    let productInfo = props.productInfo;
+    let productInfo = props.product.product_info;
     let listItems = [];
     listItems.push(<li>{'Name: ' + productInfo.name}</li>);
     listItems.push(<li>{'Brand: ' + productInfo.brand}</li>);
     listItems.push(<li>{'Description: ' + productInfo.description}</li>);
+    listItems.push(<li>{'Price: ' + props.product.price}</li>);
 
     return (
-      <ul>{listItems}</ul>
+      <ul className>{listItems}</ul>
     );
   }
 }
@@ -30,16 +31,43 @@ export default class StoreLayoutPage extends Component {
       locatedProduct: undefined,
       storeData: undefined,
       locatedProductInfoVisible: true,
+      locatedShoppingListProducts: undefined,
+
       //TODO: token/login muuta kautta
-      token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InRlc3QiLCJleHAiOjE1NDI1OTIyOTQsImVtYWlsIjoidGVzdEB0ZXN0LmZpIn0.nCC8y9W4qWO5MPfMQ_2WKI0eryFF-oBC10e9h7162zY'
+      token: ''
     };
   }
-  // temp solution for getting store data to StoreLayoutPage component -- TODO some redux magic or somethiing.
   componentDidMount() {
+
+    let tokenBody = {
+      "username": "test",
+      "password": "testpwpw"
+    };
+
+    //TEMP get token
+    fetch('https://productlocator.herokuapp.com/api/token', {
+      method: 'POST',
+      body: JSON.stringify(tokenBody),
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Accept': 'applicatiton/json',
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data.token);
+        this.setState({
+          token: data.token,
+        });
+        //get shopping list data
+        this.getShoppingLists();
+      });
+
+
 
     //get storeData
     const { id } = this.props.match.params;
-    fetch('https://productlocator.herokuapp.com/stores/' + id)
+    fetch('https://productlocator.herokuapp.com/api/stores/' + id)
       .then(response => response.json())
       .then(data =>  {
         this.setState({
@@ -47,8 +75,7 @@ export default class StoreLayoutPage extends Component {
         });
       });
 
-    //get shopping list data
-    this.getShoppingLists();
+
 
     
 
@@ -97,7 +124,7 @@ export default class StoreLayoutPage extends Component {
 
   //shopping-list
   getShoppingLists() {
-    let url = 'https://productlocator.herokuapp.com/shopping-lists/me'
+    let url = 'https://productlocator.herokuapp.com/api/shopping-lists/me';
     let AuthHeader = 'Bearer ' + this.state.token;
     return fetch(url, {
       headers: {
@@ -108,10 +135,11 @@ export default class StoreLayoutPage extends Component {
       .then(data => {
         let listItems = [];
         Object.keys(data).forEach( key => {
-          listItems.push(<li onClick={()=> this.handleShoppingListClick(key)}>{data[key].name}</li>);
+          listItems.push(<li className="shopping-lists-list-item" onClick={()=> this.handleShoppingListClick(key)}>{data[key].name}</li>);
         });
         this.setState({
-          shoppingLists: <ul>{listItems}</ul>
+          shoppingListsUlElements: <ul>{listItems}</ul>,
+          shoppingListsData: data
         });
       });
   
@@ -120,9 +148,48 @@ export default class StoreLayoutPage extends Component {
 
   handleShoppingListClick(key) {
     console.log(key);
+    console.log(this.state.shoppingListsData[key]);
 
     //Whenever a shopping list is chosen: 1. fetch product info 2. draw their locations 3. ? 4. ?
+
+    let id = this.state.shoppingListsData[key].id;
+    let url = 'https://productlocator.herokuapp.com/api/shopping-lists/' + id;
+
+    fetch(url, {
+      headers: {
+        'Authorization' : 'Bearer ' + this.state.token
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+
+        this.setState({
+          locatedShoppingListProducts: data.products
+        });
+      }); 
   }
+
+  handlePalluraClick = (data) => {
+    console.log(data);
+    this.setState({
+      locatedProduct: data.productInfo
+    });
+  }
+
+  getPalluraColor = (data) => {
+    console.log("getPaluuraColor");
+    console.log(data);
+    console.log(this.state.locatedProduct);
+    if (data.productInfo == this.state.locatedProduct) {
+      return 'green';
+    }
+    else {
+      return 'red';
+    }
+  }
+
+ 
 
 
   render() {
@@ -144,17 +211,21 @@ export default class StoreLayoutPage extends Component {
 
 
     const borders = this.getBoarders();
+
+    //yksittäisen tuotteen paikantaminen
+
     const locatedProduct = this.state.locatedProduct;
-    const locatedProductShelfPosition = () => {
+    const locatedProductShelfIndex = (aProduct) => {
       let i = 0;
       for (i = 0; i < shelves.length; i++) {
-        if (shelves[i].id == locatedProduct.shelf) {
+        if (shelves[i].id == aProduct.shelf) {
           return i;
         }
       }
     }; 
-    const getLocatedProductLocation = (axis) => {
-      let i = locatedProductShelfPosition();
+    const getLocatedProductLocation = (axis, aProduct) => {
+      console.log(aProduct);
+      let i = locatedProductShelfIndex(aProduct);
       if (axis == 'x') {
         let cx = shelves[i].x_location;
         cx += shelves[i].width*0.5;
@@ -165,8 +236,45 @@ export default class StoreLayoutPage extends Component {
         cy += shelves[i].height*0.5;
         return cy;
       }
+    }; 
 
-    };  
+    //shopping list tuotteiden paikannus
+    
+    console.log(this.state.locatedShoppingListProducts);
+    
+    const getShoppingListPallurat = () => {
+
+      let results = [];
+
+      if (this.state.locatedShoppingListProducts) {
+        let products = this.state.locatedShoppingListProducts;
+        Object.keys(products).forEach( key => {
+          //for each product, draw a circle in the right shelf
+          let x = getLocatedProductLocation('x', products[key]);
+          let y = getLocatedProductLocation('y', products[key]);
+          results.push({
+            'x': x,
+            'y': y,
+            'productInfo': products[key],
+          });
+
+        });
+        // console.log(results);
+        return results;
+      }
+      else {
+        return [];
+      }
+
+      
+    };
+
+    
+    
+   
+    
+
+
     return (
       <div className="store-layout-page">
         <div className="2nd-svg">
@@ -189,16 +297,24 @@ export default class StoreLayoutPage extends Component {
                 style={shelvesStyle}
               />
             ))}
-            {locatedProduct && shelves[locatedProductShelfPosition()] &&
+            {locatedProduct && shelves[locatedProductShelfIndex(locatedProduct)] &&
               <circle
                 // cx={shelves[locatedProductShelfPosition()].x_location}
                 // cy={shelves[locatedProductShelfPosition()].y_location}
-                cx = {getLocatedProductLocation('x')}
-                cy = {getLocatedProductLocation('y')}
+                cx = {getLocatedProductLocation('x', locatedProduct)}
+                cy = {getLocatedProductLocation('y', locatedProduct)}
                 fill="red"
                 r="25"
               />
             }
+            { getShoppingListPallurat().map(data => (
+              <circle className='pallura' onClick={() => this.handlePalluraClick(data)}
+                cx = {data.x}
+                cy = {data.y}
+                fill = {this.getPalluraColor(data)}
+                r="25"
+              />
+            ))}
           </svg>
           {this.state.storeData && this.state.storeData.id &&
           <div className="product-search-bar">
@@ -210,14 +326,14 @@ export default class StoreLayoutPage extends Component {
           {this.state.locatedProduct && this.state.locatedProductInfoVisible &&
           <div className="located-product-info">
             <b>ProudctInfo</b>
-            <ProductInfo productInfo={this.state.locatedProduct.product_info} />
+            <ProductInfo product={this.state.locatedProduct} />
           </div>
           }
 
           {
             <div className='shopping-lists'>
               <b>ShoppingLists</b>
-              {this.state.shoppingLists}
+              {this.state.shoppingListsUlElements}
             </div>
           }
           

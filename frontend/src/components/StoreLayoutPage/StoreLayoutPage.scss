@@ -24,16 +24,25 @@ ul {
     padding: 0;
 }
 
+.shopping-lists-list-item:hover {
+    cursor: pointer;
+}
+.pallura:hover {
+    cursor: pointer;
+}
+
 .located-product-info {
     margin-top: 250px;
-    margin-left: 37%;
+    margin-left: 50%;
     position: absolute;
+    border-style: solid;
 }
 
 .shopping-lists {
-    margin-top: 350px;
+    margin-top: 250px;
     margin-left: 37%;
     position: absolute;
+    border-style: solid;
 
 }
 

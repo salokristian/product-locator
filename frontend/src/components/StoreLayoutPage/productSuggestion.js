@@ -34,7 +34,7 @@ export default class SearchBar extends Component {
     
     
     // const storeId = "1";
-    let fetchUrl = "https://productlocator.herokuapp.com/stores/" + this.props.storeId + "/products?search=" + value;
+    let fetchUrl = "https://productlocator.herokuapp.com/api/stores/" + this.props.storeId + "/products?search=" + value;
 
     console.log("productsuggestion storeId: " +  this.props.storeId);
 
