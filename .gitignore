@@ -1,4 +1,6 @@
 .venv
 .vscode
 .DS_Store
+build
+static
 frontend/node_modules
