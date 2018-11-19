@@ -19,6 +19,41 @@
     position: absolute;
 }
 
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.shopping-lists-list-item:hover {
+    cursor: pointer;
+}
+.pallura:hover {
+    cursor: pointer;
+}
+
+.located-product-info {
+    margin-top: 1px;
+    margin-right: 37%;
+    position: absolute;
+    bottom:0;
+    right:0;
+    border-style: solid;
+    border-width: 1px;
+}
+
+.shopping-lists {
+    bottom:0;
+    left:0;
+    margin-top: 250px;
+    margin-left: 37%;
+    position: absolute;
+    border-style: solid;
+    border-width: 1px
+
+
+}
+
+
 .react-autosuggest__suggestions-list {
     margin: 0;
     padding: 0;
