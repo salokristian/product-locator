@@ -20,13 +20,21 @@
 }
 
 ul {
-    list-style-type: none
+    list-style-type: none;
+    padding: 0;
 }
 
 .located-product-info {
     margin-top: 250px;
     margin-left: 37%;
     position: absolute;
+}
+
+.shopping-lists {
+    margin-top: 350px;
+    margin-left: 37%;
+    position: absolute;
+
 }
 
 

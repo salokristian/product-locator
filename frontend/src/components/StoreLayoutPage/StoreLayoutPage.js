@@ -7,7 +7,6 @@ import './StoreLayoutPage.scss';
 //haetun tuotteen infolaatikko 
 function ProductInfo(props) {
   if (props) {
-    console.log(props.productInfo);
     let productInfo = props.productInfo;
     let listItems = [];
     listItems.push(<li>{'Name: ' + productInfo.name}</li>);
@@ -20,6 +19,9 @@ function ProductInfo(props) {
   }
 }
 
+
+
+
 //kauppakartta
 export default class StoreLayoutPage extends Component {
   constructor(props) {
@@ -28,57 +30,32 @@ export default class StoreLayoutPage extends Component {
       locatedProduct: undefined,
       storeData: undefined,
       locatedProductInfoVisible: true,
-
-
+      //TODO: token/login muuta kautta
+      token: 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoyLCJ1c2VybmFtZSI6InRlc3QiLCJleHAiOjE1NDI1OTIyOTQsImVtYWlsIjoidGVzdEB0ZXN0LmZpIn0.nCC8y9W4qWO5MPfMQ_2WKI0eryFF-oBC10e9h7162zY'
     };
   }
   // temp solution for getting store data to StoreLayoutPage component -- TODO some redux magic or somethiing.
   componentDidMount() {
+
+    //get storeData
     const { id } = this.props.match.params;
-    console.log(id);
     fetch('https://productlocator.herokuapp.com/stores/' + id)
       .then(response => response.json())
       .then(data =>  {
-        console.log(data);
         this.setState({
           storeData: data
         });
       });
+
+    //get shopping list data
+    this.getShoppingLists();
+
+    
+
+    
   }
 
   getBoarders() {
-    // const floorsShelvesJson = {
-    //   'floors': [
-    //     {
-    //       'id': 1,
-    //       'number': 1,
-    //       'description': 'First and only floor.',
-    //       'points': [[0, 0], [20, 0], [20, 20], [0, 20]],
-    //       'store': 1
-    //     }
-    //   ],
-    //   'shelves': [
-    //     {
-    //       'id': 1,
-    //       'x_location': 3,
-    //       'y_location': 4,
-    //       'width': 5,
-    //       'height': 1,
-    //       'floor': 1,
-    //       'type': 'shelf'
-    //     },
-    //     {
-    //       'id': 2,
-    //       'x_location': 10,
-    //       'y_location': 10,
-    //       'width': 2,
-    //       'height': 7,
-    //       'floor': 1,
-    //       'type': 'shelf'
-    //     }
-    //   ]
-    // };
-
     //generate svg for floor
     let svg = [];
    
@@ -88,7 +65,6 @@ export default class StoreLayoutPage extends Component {
     //assuming has just one floor for now    
     let points = [];
     if (this.state.storeData != null) {
-      console.log("getsvg: " + this.state.storeData["name"]);
       points = this.state.storeData['floors'][0]['points'];
     }
     
@@ -112,14 +88,40 @@ export default class StoreLayoutPage extends Component {
 
 
   handleSuggestionClick = (productData) => {
-    console.log("onSuggestionClick storeLayoutPage.js");
-    console.log(this.state.locatedProduct);
-
     //push to this.state.locatedProducts all product info 
     this.setState({
       locatedProduct: productData['suggestion']
     });
 
+  }
+
+  //shopping-list
+  getShoppingLists() {
+    let url = 'https://productlocator.herokuapp.com/shopping-lists/me'
+    let AuthHeader = 'Bearer ' + this.state.token;
+    return fetch(url, {
+      headers: {
+        'Authorization': AuthHeader
+      }
+    })
+      .then(response => response.json())
+      .then(data => {
+        let listItems = [];
+        Object.keys(data).forEach( key => {
+          listItems.push(<li onClick={()=> this.handleShoppingListClick(key)}>{data[key].name}</li>);
+        });
+        this.setState({
+          shoppingLists: <ul>{listItems}</ul>
+        });
+      });
+  
+  
+  }
+
+  handleShoppingListClick(key) {
+    console.log(key);
+
+    //Whenever a shopping list is chosen: 1. fetch product info 2. draw their locations 3. ? 4. ?
   }
 
 
@@ -130,7 +132,6 @@ export default class StoreLayoutPage extends Component {
     let shelves = [];
     if (this.state.storeData != null) {
       shelves = this.state.storeData['floors'][0]['shelves'];
-      console.log(shelves);
     }
 
     const shelvesStyle = {
@@ -144,8 +145,6 @@ export default class StoreLayoutPage extends Component {
 
     const borders = this.getBoarders();
     const locatedProduct = this.state.locatedProduct;
-    console.log(this.state.locatedProduct);
-
     const locatedProductShelfPosition = () => {
       let i = 0;
       for (i = 0; i < shelves.length; i++) {
@@ -210,9 +209,16 @@ export default class StoreLayoutPage extends Component {
           }
           {this.state.locatedProduct && this.state.locatedProductInfoVisible &&
           <div className="located-product-info">
+            <b>ProudctInfo</b>
             <ProductInfo productInfo={this.state.locatedProduct.product_info} />
           </div>
-        
+          }
+
+          {
+            <div className='shopping-lists'>
+              <b>ShoppingLists</b>
+              {this.state.shoppingLists}
+            </div>
           }
           
         </div>
