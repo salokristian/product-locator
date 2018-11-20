@@ -35,20 +35,20 @@ class StoreLayoutPage extends Component {
     };
   }
   componentDidMount() {
-    const token = window.localStorage.getItem("token");
-    if (token) {
-      this.getShoppingLists();
-    }
-    //get storeData
+    //get storeData & shopping list data
     const { id } = this.props.match.params;
     fetch("https://productlocator.herokuapp.com/api/stores/" + id).then(
       response => {
-        console.log(response);
         if (response.status > 199 && response.status < 301) {
           response.json().then(data => {
             this.setState({
               storeData: data
             });
+
+            const token = window.localStorage.getItem("token");
+            if (token) {
+              this.getShoppingLists(data);
+            }
           });
         } else {
           console.log("error");
@@ -69,8 +69,6 @@ class StoreLayoutPage extends Component {
     if (this.state.storeData != null) {
       points = this.state.storeData["floors"][0]["points"];
     }
-
-    console.log(points);
 
     for (i = 0; i < points.length; i++) {
       if (i + 1 < points.length) {
@@ -97,7 +95,7 @@ class StoreLayoutPage extends Component {
   };
 
   //shopping-list
-  getShoppingLists() {
+  getShoppingLists(storeData) {
     let url = "https://productlocator.herokuapp.com/api/shopping-lists/me";
     let AuthHeader = "Bearer " + this.state.token;
     return fetch(url, {
@@ -107,7 +105,17 @@ class StoreLayoutPage extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
+        // console.log(data);
+        // console.log(storeData);
+
+        for (let key in data) {
+          if (data[key].store.id !== storeData.id) {
+            // console.log("hep! " + storeData.id);
+            delete data[key];
+          }
+        }
+
+
         this.setState({
           shoppingListsData: data
         });
@@ -126,8 +134,6 @@ class StoreLayoutPage extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data);
-
         this.setState({
           locatedShoppingListProducts: data.products,
           showMultiplePalluras: true,
@@ -137,17 +143,13 @@ class StoreLayoutPage extends Component {
   }
 
   handlePalluraClick = data => {
-    console.log(data);
     this.setState({
       locatedProduct: data.productInfo
     });
   };
 
   getPalluraColor = data => {
-    console.log("getPaluuraColor");
-    console.log(data);
-    console.log(this.state.locatedProduct);
-    if (data.productInfo == this.state.locatedProduct) {
+    if (data.productInfo === this.state.locatedProduct) {
       return "green";
     } else {
       return "red";
@@ -158,7 +160,7 @@ class StoreLayoutPage extends Component {
     //toimii nyt, mutta oikeesti renderöi kahdesti, vaikka ComponentWillMount kanssa ei mun mielestä pitäisi..
     //reunat (boarders) ja hyllyt (shelves) tulee nyt vammasesti eri paikoista, ihan hyvin vois olla molemmat vaikka täällä.
     let shelves = [];
-    if (this.state.storeData != null) {
+    if (this.state.storeData !== null) {
       shelves = this.state.storeData["floors"][0]["shelves"];
     }
 
@@ -173,7 +175,6 @@ class StoreLayoutPage extends Component {
     };
 
     const borders = this.getBoarders();
-    console.log(borders);
     let svgWidth = 0;
     let svgHeight = 0;
     let svgViewBox = "0 0 0 0";
@@ -189,20 +190,19 @@ class StoreLayoutPage extends Component {
     const locatedProductShelfIndex = aProduct => {
       let i = 0;
       for (i = 0; i < shelves.length; i++) {
-        if (shelves[i].id == aProduct.shelf) {
+        if (shelves[i].id === aProduct.shelf) {
           return i;
         }
       }
     };
     const getLocatedProductLocation = (axis, aProduct) => {
-      console.log(aProduct);
       let i = locatedProductShelfIndex(aProduct);
-      if (axis == "x") {
+      if (axis === "x") {
         let cx = shelves[i].x_location;
         cx += shelves[i].width * 0.5;
         return cx;
       }
-      if (axis == "y") {
+      if (axis === "y") {
         let cy = shelves[i].y_location;
         cy += shelves[i].height * 0.5;
         return cy;
