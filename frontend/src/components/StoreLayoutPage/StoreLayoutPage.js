@@ -163,7 +163,9 @@ class StoreLayoutPage extends Component {
     }
 
     const shelvesStyle = {
-      fill: "blue"
+      fill: 'lightgrey',
+      ['stroke-width']: '3',
+      stroke: 'grey',
     };
 
     const borderStyle = {
@@ -237,75 +239,62 @@ class StoreLayoutPage extends Component {
 
     return (
       <div className="store-layout-page">
-        {this.state.storeData && this.state.storeData.id && (
+        <div className="store-layout-page-container">
+          {this.state.storeData && this.state.storeData.id &&
           <div className="product-search-bar">
-            <SearchBar
+            <SearchBar 
               storeId={this.state.storeData.id}
               handleSuggestionClick={this.handleSuggestionClick}
               token={token}
               selectedShoppingList={selectedShoppingList}
             />
           </div>
-        )}
-          <svg
-            width={svgWidth ? svgWidth : 0}
-            height={svgHeight ? svgHeight : 0}
-            viewBox={svgViewBox != "0 0 0 0" ? svgViewBox : "0 0 1000 1000"}
-          >
-            {borders &&
-              borders.length > 0 &&
-              borders.map(border => (
-                <line
-                  x1={border.x1}
-                  y1={border.y1}
-                  x2={border.x2}
-                  y2={border.y2}
-                  style={borderStyle}
-                />
-              ))}
-            {shelves &&
-              shelves.map(shelf => (
-                <rect
-                  x={shelf.x_location}
-                  y={shelf.y_location}
-                  width={shelf.width}
-                  height={shelf.height}
-                  style={shelvesStyle}
-                />
-              ))}
-            {locatedProduct &&
-              shelves[locatedProductShelfIndex(locatedProduct)] &&
-              !this.state.showMultiplePalluras && (
-                <circle
-                  // cx={shelves[locatedProductShelfPosition()].x_location}
-                  // cy={shelves[locatedProductShelfPosition()].y_location}
-                  cx={getLocatedProductLocation("x", locatedProduct)}
-                  cy={getLocatedProductLocation("y", locatedProduct)}
-                  fill="green"
-                  r="25"
-                />
-              )}
-            {this.state.showMultiplePalluras &&
-              getShoppingListPallurat().map(data => (
-                <circle
-                  className="pallura"
-                  onClick={() => this.handlePalluraClick(data)}
-                  cx={data.x}
-                  cy={data.y}
-                  fill={this.getPalluraColor(data)}
-                  r="25"
-                />
-              ))}
+          }
+        </div>
+        <div className="store-layout-page-main-map">
+          <svg className="store-layout-page-main-map-svg" viewBox= {svgViewBox != "0 0 0 0" ?  svgViewBox : "0 0 50 50"}>
+            {borders && borders.length > 0 && borders.map((border) => (
+              <line
+                x1={border.x1}
+                y1={border.y1}
+                x2={border.x2}
+                y2={border.y2}
+                style={borderStyle}
+              />
+            ))}
+            {shelves && shelves.map((shelf) => (
+              <rect
+                x={shelf.x_location}
+                y={shelf.y_location}
+                width={shelf.width}
+                height={shelf.height}
+                style={shelvesStyle}
+              />
+            ))}
+            {locatedProduct && shelves[locatedProductShelfIndex(locatedProduct)] && !this.state.showMultiplePalluras &&
+              <circle
+                // cx={shelves[locatedProductShelfPosition()].x_location}
+                // cy={shelves[locatedProductShelfPosition()].y_location}
+                cx = {getLocatedProductLocation('x', locatedProduct)}
+                cy = {getLocatedProductLocation('y', locatedProduct)}
+                fill="green"
+                r="25"
+              />
+            }
+            {this.state.showMultiplePalluras && getShoppingListPallurat().map(data => (
+              <circle className='pallura' onClick={() => this.handlePalluraClick(data)}
+                cx = {data.x}
+                cy = {data.y}
+                fill = {this.getPalluraColor(data)}
+                r="25"
+              />
+            ))}
           </svg>
-          {this.state.locatedProduct && (
-            <div className="located-product-info">
-              <b>ProudctInfo</b>
-              <ProductInfo product={this.state.locatedProduct} />
-            </div>
-          )}
-
-          {this.state.storeData && token && (
-            <div className="shopping-lists">
+          </div>
+        <div className="store-layout-page-container">
+          <div className="store-layout-page-footer">
+            { this.state.storeData && token &&
+            <div className='shopping-lists'>
               <b>Shopping lists</b>
               <ul>
                 <Link to={`/newshoppinglist/${this.state.storeData.id}`}>
@@ -323,8 +312,16 @@ class StoreLayoutPage extends Component {
                   ))}
               </ul>
             </div>
-          )}
+            }
+            {this.state.locatedProduct &&
+            <div className="located-product-info">
+              <b>ProudctInfo</b>
+              <ProductInfo product={this.state.locatedProduct} />
+            </div>
+            }
+          </div>
         </div>
+      </div>
     );
   }
 }
