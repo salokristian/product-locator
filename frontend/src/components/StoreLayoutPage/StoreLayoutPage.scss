@@ -58,8 +58,11 @@ ul {
 
 .react-autosuggest__suggestions-list {
     margin: 0;
-    padding: 0;
+    line-height: 32px;
     list-style-type: none;
+    position: absolute;
+    width: 60%;
+    background: white;
 }
 
 .product-search-suggestion {

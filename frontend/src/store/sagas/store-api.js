@@ -37,9 +37,10 @@ export async function getStoreList() {
 }
 
 function getStoresByName(text) {
-  const stores = getStoreList();
-  const filtered = stores.filter(store => store.name.toLowerCase().includes(text.toLowerCase()));
-  return filtered.sort(compare);
+  return getStoreList().then((res) => {
+    const filtered = res.filter(store => store.name.toLowerCase().includes(text.toLowerCase()));
+    return filtered.sort(compare);
+  });
 }
 
 export {
