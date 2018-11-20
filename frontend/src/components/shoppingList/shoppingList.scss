@@ -1,0 +1,99 @@
+.shopping-list-page {
+  display: flex;
+}
+
+.shopping-list-page-header {
+  margin: 10px auto 0 auto;
+}
+
+.shopping-list-page .react-autosuggest__container {
+  width: 50%;
+  margin: 30px auto 0 auto;
+}
+
+.shopping-list-page .react-autosuggest__input {
+  width: 100%;
+}
+
+.shopping-list-page-list-container {
+  width: 80%;
+  margin: 20px auto 20px auto;
+  border: 1px solid grey;
+}
+
+.shopping-list-page-list-name {
+  display: inline-block;
+  width: 80%;
+  margin: 0;
+  padding-left: 1%;
+  border-right: 1px solid grey;
+  border-bottom: 1px solid grey;
+}
+
+.shopping-list-page-list-price {
+  display: inline-block;
+  width: 18%;
+  margin: 0;
+  text-align: center;
+  border-bottom: 1px solid grey;
+}
+
+.shopping-list-page-info-container {
+  margin: auto;
+  width: 40%;
+  border: 1px solid grey;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.shopping-list-page-info-container img {
+  max-width: 100%;
+  max-height: 200px;
+}
+
+.shopping-list-page-info-exit-container {
+  position: relative;
+}
+
+.shopping-list-page-info-exit {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  border: 1px solid grey;
+  padding: 5px
+}
+
+.shopping-list-page-info-remove-container {
+  display: flex;
+}
+
+.shopping-list-page-info-remove {
+  margin: auto;
+  border: 1px solid grey;
+  padding: 5px
+}
+
+.shopping-list-page-to-fill-container {
+  margin: 20px auto 0 auto;
+  width: 80%;
+  border: 1px solid grey;
+  padding: 10px;
+}
+
+.shopping-list-page-to-fill-container input {
+  width: 80%;
+  margin: 5px;
+}
+
+.shopping-list-page-submit {
+  margin: auto;
+  cursor: pointer;
+  border: 1px solid grey;
+  padding: 5px
+}
+
+.shopping-list-page-error {
+  margin-left: 30%;
+  color: red;
+}

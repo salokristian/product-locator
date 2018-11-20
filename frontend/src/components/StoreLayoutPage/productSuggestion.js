@@ -3,8 +3,31 @@ import ReactAutosuggest from 'react-autosuggest';
 
 
 
-const addToCart = (suggestion) => {
-  // console.log("add to cart") // miksi tämä triggeraa ennen clickia mouseoverilla
+const addToCart = (suggestion, selectedShoppingList, token) => {
+  /*
+  console.log('suggestion', suggestion); // miksi tämä triggeraa ennen clickia mouseoverilla
+  console.log('selected List', selectedShoppingList);
+  const newArray = selectedShoppingList.products;
+  newArray.push(suggestion.suggestion);
+  console.log('uus array', newArray);
+  console.log(selectedShoppingList.id);
+  const AuthHeader = 'Bearer ' + token;
+  fetch(`https://productlocator.herokuapp.com/api/shopping-lists/${selectedShoppingList.id}`, {
+    method: 'PUT',
+    body: newArray,
+    headers: {
+      'Authorization': AuthHeader,
+    },
+  }).then(res => {
+    if (res.status === 200) {
+      res.json().then(data => {
+        console.log(data);
+      });
+    } else {
+      console.log('error');
+    }
+  });
+  */
 
 };
 // When suggestion is clicked, Autosuggest needs to populate the input
@@ -68,12 +91,14 @@ export default class SearchBar extends Component {
   renderSuggestion = suggestion => (
     <div className="product-search-suggestion" onClick={() => this.props.handleSuggestionClick({suggestion})}>
       <div className="product-search-suggestion-name">{suggestion['product_info']['name']}</div>
-      <button
-        className="product-search-suggestion-add-to-cart"
-        onClick={() => addToCart({suggestion})}
-      >
-        Add to cart
-      </button>
+      { this.props.selectedShoppingList &&
+        <button
+          className="product-search-suggestion-add-to-cart"
+          onClick={() => addToCart({suggestion}, this.props.selectedShoppingList, this.props.token)}
+        >
+          Add to cart
+        </button>
+      }
     </div>
   );
 

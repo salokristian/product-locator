@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import SearchBar from './productSuggestion';
 import './StoreLayoutPage.scss';
 
@@ -7,15 +8,15 @@ import './StoreLayoutPage.scss';
 //haetun tuotteen infolaatikko 
 function ProductInfo(props) {
   if (props) {
-    let productInfo = props.product.product_info;
-    let listItems = [];
-    listItems.push(<li>{'Name: ' + productInfo.name}</li>);
-    listItems.push(<li>{'Brand: ' + productInfo.brand}</li>);
-    listItems.push(<li>{'Description: ' + productInfo.description}</li>);
-    listItems.push(<li>{'Price: ' + props.product.price}</li>);
+    const productInfo = props.product.product_info;
 
     return (
-      <ul className>{listItems}</ul>
+      <ul className>
+        <li>{'Name: ' + productInfo.name}</li>
+        <li>{'Brand: ' + productInfo.brand}</li>
+        <li>{'Description: ' + productInfo.description}</li>
+        <li>{'Price: ' + props.product.price}</li>
+      </ul>
     );
   }
 }
@@ -29,10 +30,11 @@ class StoreLayoutPage extends Component {
     super(props);
     this.state = {
       locatedProduct: undefined,
-      storeData: undefined,
+      storeData: null,
       showMultiplePalluras: true,
       locatedShoppingListProducts: undefined,
-
+      shoppingListsData: null,
+      selectedShoppingList: null,
       //TODO: token/login muuta kautta
       token: window.localStorage.getItem('token'),
     };
@@ -42,24 +44,20 @@ class StoreLayoutPage extends Component {
     if (token) {
       this.getShoppingLists();
     }
-
-
-
     //get storeData
     const { id } = this.props.match.params;
     fetch('https://productlocator.herokuapp.com/api/stores/' + id)
-      .then(response => response.json())
-      .then(data =>  {
-        this.setState({
-          storeData: data
-        });
-      });
-
-
-
-    
-
-    
+      .then(response => {
+        console.log(response);
+        if (response.status > 199 && response.status < 301) {
+          response.json().then(data =>  {
+            this.setState({
+              storeData: data
+            });
+          });
+        } else {
+          console.log('error');
+        }});
   }
 
   getBoarders() {
@@ -114,12 +112,8 @@ class StoreLayoutPage extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        let listItems = [];
-        Object.keys(data).forEach( key => {
-          listItems.push(<li className="shopping-lists-list-item" onClick={()=> this.handleShoppingListClick(key)}>{data[key].name}</li>);
-        });
+        console.log(data);
         this.setState({
-          shoppingListsUlElements: <ul>{listItems}</ul>,
           shoppingListsData: data
         });
       });
@@ -127,14 +121,11 @@ class StoreLayoutPage extends Component {
   
   }
 
-  handleShoppingListClick(key) {
-    console.log(key);
-    console.log(this.state.shoppingListsData[key]);
+  handleShoppingListClick(id) {
 
     //Whenever a shopping list is chosen: 1. fetch product info 2. draw their locations 3. ? 4. ?
 
-    let id = this.state.shoppingListsData[key].id;
-    let url = 'https://productlocator.herokuapp.com/api/shopping-lists/' + id;
+    const url = 'https://productlocator.herokuapp.com/api/shopping-lists/' + id;
 
     fetch(url, {
       headers: {
@@ -143,11 +134,12 @@ class StoreLayoutPage extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        console.log(data)
+        console.log(data);
 
         this.setState({
           locatedShoppingListProducts: data.products,
           showMultiplePalluras: true,
+          selectedShoppingList: data,
         });
       }); 
   }
@@ -252,7 +244,7 @@ class StoreLayoutPage extends Component {
     };
 
     
-    
+    const { token, shoppingListsData, selectedShoppingList } = this.state;
    
     
 
@@ -302,7 +294,10 @@ class StoreLayoutPage extends Component {
           <div className="product-search-bar">
             <SearchBar 
               storeId={this.state.storeData.id}
-              handleSuggestionClick={this.handleSuggestionClick} />
+              handleSuggestionClick={this.handleSuggestionClick}
+              token={token}
+              selectedShoppingList={selectedShoppingList}
+              />
           </div>
           }
           {this.state.locatedProduct &&
@@ -312,10 +307,27 @@ class StoreLayoutPage extends Component {
           </div>
           }
 
-          {
+          { this.state.storeData && token &&
             <div className='shopping-lists'>
-              <b>ShoppingLists</b>
-              {this.state.shoppingListsUlElements}
+              <b>Shopping lists</b>
+              <ul> 
+                <Link to={`/newshoppinglist/${this.state.storeData.id}`}>
+                  <li
+                    className="shopping-lists-list-item"
+                  >
+                    Create a new
+                  </li>
+                </Link>
+                {shoppingListsData && shoppingListsData.map((data) => (
+                  <li
+                    className="shopping-lists-list-item"
+                    onClick={()=> this.handleShoppingListClick(data.id)}
+                    key={data.id}
+                  >
+                    {data.name}
+                  </li>
+                ))}
+              </ul>
             </div>
           }
           
