@@ -176,7 +176,9 @@ class StoreLayoutPage extends Component {
     }
 
     const shelvesStyle = {
-      fill: 'blue',
+      fill: 'lightgrey',
+      ['stroke-width']: '3',
+      stroke: 'grey',
     };
 
     const borderStyle = {
@@ -251,8 +253,20 @@ class StoreLayoutPage extends Component {
 
     return (
       <div className="store-layout-page">
-        <div className="2nd-svg">
-          <svg width="2000" height="2000" viewBox="0 0 2000 2000">
+        <div className="store-layout-page-container">
+          {this.state.storeData && this.state.storeData.id &&
+          <div className="product-search-bar">
+            <SearchBar 
+              storeId={this.state.storeData.id}
+              handleSuggestionClick={this.handleSuggestionClick}
+              token={token}
+              selectedShoppingList={selectedShoppingList}
+            />
+          </div>
+          }
+        </div>
+        <div className="store-layout-page-main-map">
+          <svg className="store-layout-page-main-map-svg" width="2000" height="2000" viewBox="0 0 2000 2000">
             {borders && borders.length > 0 && borders.map((border) => (
               <line
                 x1={border.x1}
@@ -290,24 +304,10 @@ class StoreLayoutPage extends Component {
               />
             ))}
           </svg>
-          {this.state.storeData && this.state.storeData.id &&
-          <div className="product-search-bar">
-            <SearchBar 
-              storeId={this.state.storeData.id}
-              handleSuggestionClick={this.handleSuggestionClick}
-              token={token}
-              selectedShoppingList={selectedShoppingList}
-              />
           </div>
-          }
-          {this.state.locatedProduct &&
-          <div className="located-product-info">
-            <b>ProudctInfo</b>
-            <ProductInfo product={this.state.locatedProduct} />
-          </div>
-          }
-
-          { this.state.storeData && token &&
+        <div className="store-layout-page-container">
+          <div className="store-layout-page-footer">
+            { this.state.storeData && token &&
             <div className='shopping-lists'>
               <b>Shopping lists</b>
               <ul> 
@@ -329,8 +329,14 @@ class StoreLayoutPage extends Component {
                 ))}
               </ul>
             </div>
-          }
-          
+            }
+            {this.state.locatedProduct &&
+            <div className="located-product-info">
+              <b>ProudctInfo</b>
+              <ProductInfo product={this.state.locatedProduct} />
+            </div>
+            }
+          </div>
         </div>
       </div>
     );
