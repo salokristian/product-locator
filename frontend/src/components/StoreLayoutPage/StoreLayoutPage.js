@@ -24,7 +24,7 @@ function ProductInfo(props) {
 
 
 //kauppakartta
-export default class StoreLayoutPage extends Component {
+class StoreLayoutPage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -34,34 +34,14 @@ export default class StoreLayoutPage extends Component {
       locatedShoppingListProducts: undefined,
 
       //TODO: token/login muuta kautta
-      token: ''
+      token: window.localStorage.getItem('token'),
     };
   }
   componentDidMount() {
-
-    let tokenBody = {
-      "username": "test",
-      "password": "testpwpw"
-    };
-
-    //TEMP get token
-    fetch('https://productlocator.herokuapp.com/api/token', {
-      method: 'POST',
-      body: JSON.stringify(tokenBody),
-      headers: {
-        'Content-Type': 'application/json',
-        // 'Accept': 'applicatiton/json',
-      }
-    })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data.token);
-        this.setState({
-          token: data.token,
-        });
-        //get shopping list data
-        this.getShoppingLists();
-      });
+    const token = window.localStorage.getItem('token');
+    if (token) {
+      this.getShoppingLists();
+    }
 
 
 
@@ -344,3 +324,7 @@ export default class StoreLayoutPage extends Component {
     );
   }
 }
+
+
+export default StoreLayoutPage;
+

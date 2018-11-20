@@ -18,6 +18,7 @@ class LandingPage extends Component {
       history: false,
       adminTools: false,
       searchText: '',
+      account: window.localStorage.getItem('account_name') || null,
     };
   }
 
@@ -74,10 +75,15 @@ class LandingPage extends Component {
     this.setState({ searchText: value });
   };
 
-  render() {
-    const { store, nearby, favourites, history, adminTools, searchText } = this.state;
-    const { account, stores } = this.props;
+  logOut = () => {
+    this.props.setAccount(null);
+    window.localStorage.clear();
+    this.setState({ account: null });
+  }
 
+  render() {
+    const { store, nearby, favourites, history, adminTools, searchText, account } = this.state;
+    const { stores } = this.props;
 
     const clickedFilterBorder = {
       border: '3px solid black',
@@ -97,7 +103,7 @@ class LandingPage extends Component {
               className="landing-page-login"
             >
               <p> 
-                {account.username}
+                {account}
               </p>
             </div> :
             <Link to="/login">
@@ -111,6 +117,7 @@ class LandingPage extends Component {
             </Link>
           }
         </div>
+        {account && <p className="landing-page-user-info" onClick={this.logOut}> Log out </p>}
         <div className="landing-page-filters">
           <div 
             className="landing-page-filter-names"

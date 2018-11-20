@@ -46,6 +46,8 @@ class LogIn extends Component {
           const { user, token } = data;
           this.props.dispatch(setAccount(user));
           window.localStorage.setItem('token', token);
+          window.localStorage.setItem('account_name', user.username);
+          window.localStorage.setItem('account_id', user.id);
           this.props.history.push('/');
         });
       } else {
