@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { setAccount, fetchNearbyStores, fetchByStoreName } from '../../store/actions/index';
 import StoreListItem from './storeListItem';
+import { Link } from 'react-router-dom';
 import './landingPage.scss';
 
 class LandingPage extends Component {
@@ -24,16 +25,6 @@ class LandingPage extends Component {
     this.props.fetchNearbyStores('location');
   }
 
-
-  loginClick = () => {
-    const { setAccount, account } = this.props;
-    if (!account) {
-      setAccount({
-        name: 'test user',
-        role: 'Admin',
-      });
-    }
-  }
 
   selectStore = (id) => {
     const foundStore = this.props.stores.find(store => store.id === id);
@@ -87,6 +78,7 @@ class LandingPage extends Component {
     const { store, nearby, favourites, history, adminTools, searchText } = this.state;
     const { account, stores } = this.props;
 
+
     const clickedFilterBorder = {
       border: '3px solid black',
     };
@@ -100,16 +92,25 @@ class LandingPage extends Component {
           <div className="landing-page-title">
             <h2> Product Locator </h2>
           </div>
-          <div 
-            className="landing-page-login"
-            onClick={this.loginClick}
-          >
-            <p> 
-              {!account ? 'Log In' : 'Settings'}
-            </p>
-          </div>
+          { account ?
+            <div 
+              className="landing-page-login"
+            >
+              <p> 
+                {account.username}
+              </p>
+            </div> :
+            <Link to="/login">
+              <div 
+                className="landing-page-login"
+              >
+                <p> 
+                  Log In
+                </p>
+              </div>
+            </Link>
+          }
         </div>
-        {account && <p className="landing-page-user-info"> {`You are logged in as ${account.name}, role ${account.role}`}</p>}
         <div className="landing-page-filters">
           <div 
             className="landing-page-filter-names"
@@ -187,8 +188,9 @@ const mapStateToProps = state => (
 LandingPage.propTypes = {
   stores: PropTypes.array.isRequired,
   account: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    role: PropTypes.string.isRequired
+    username: PropTypes.string,
+    role: PropTypes.string,
+    id: PropTypes.number,
   }),
   setAccount: PropTypes.func.isRequired,
   fetchNearbyStores: PropTypes.func.isRequired,

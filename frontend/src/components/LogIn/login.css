@@ -1,0 +1,20 @@
+
+.product-locator-login-container {
+  margin: auto;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.product-locator-login-page {
+  display: flex;
+}
+
+.product-locator-login-submit {
+  margin-left: 40%;
+  cursor: pointer;
+}
+
+.log-in-error-text {
+  color: red;
+}
