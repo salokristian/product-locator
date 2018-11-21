@@ -1,28 +1,33 @@
 .landing-page__storeSearch-list-item {
-  display: inline-block;
-  width: 100%;
+  width: 230px;
   height: 20px;
   cursor: pointer;
-}
-.landing-page__storeSearch-list-item:nth-child(odd) {
-  background: lightgrey;
+  border: 1px solid;
+  padding: 10px;
+  border-radius: 5px;
+  margin: 10px auto;
 }
 
 .landing-page__storeSearch-list-item:hover {
-  background: yellow;
+  background: rgb(228, 228, 228);
 }
 
 .landing-page__storeSearch-list-item-title {
   display: inline-block;
-  width: 80%;
+  width: 50%;
   margin: 0;
-  padding-left: 1%;
   border-right: 1px solid grey;
 }
 
 .landing-page__storeSearch-list-item-distance {
   display: inline-block;
-  width: 17%;
+  width: 45%;
+  padding-left: 10px;
   margin: 0;
-  text-align: center;
+}
+
+.phone-logo {
+  display: inline-block;
+  width: 17px;
+  height: 17px;
 }

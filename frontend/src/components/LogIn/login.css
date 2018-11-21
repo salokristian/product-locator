@@ -1,6 +1,6 @@
 
 .product-locator-login-container {
-  margin: auto;
+  margin: 50px auto auto;
   border: 1px solid black;
   border-radius: 5px;
   padding: 20px;
@@ -8,6 +8,7 @@
 
 .product-locator-login-page {
   display: flex;
+  min-height: 100vh;
 }
 
 .product-locator-login-submit {

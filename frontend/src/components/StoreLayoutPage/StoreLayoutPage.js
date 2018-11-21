@@ -1,7 +1,7 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import SearchBar from "./productSuggestion";
-import "./StoreLayoutPage.scss";
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import SearchBar from './productSuggestion';
+import './StoreLayoutPage.scss';
 
 //haetun tuotteen infolaatikko
 function ProductInfo(props) {
@@ -10,10 +10,10 @@ function ProductInfo(props) {
 
     return (
       <ul className>
-        <li>{"Name: " + productInfo.name}</li>
-        <li>{"Brand: " + productInfo.brand}</li>
-        <li>{"Description: " + productInfo.description}</li>
-        <li>{"Price: " + props.product.price}</li>
+        <li>{'Name: ' + productInfo.name}</li>
+        <li>{'Brand: ' + productInfo.brand}</li>
+        <li>{'Description: ' + productInfo.description}</li>
+        <li>{'Price: ' + props.product.price}</li>
       </ul>
     );
   }
@@ -31,13 +31,13 @@ class StoreLayoutPage extends Component {
       shoppingListsData: null,
       selectedShoppingList: null,
       //TODO: token/login muuta kautta
-      token: window.localStorage.getItem("token")
+      token: window.localStorage.getItem('token')
     };
   }
   componentDidMount() {
     //get storeData & shopping list data
     const { id } = this.props.match.params;
-    fetch("https://productlocator.herokuapp.com/api/stores/" + id).then(
+    fetch('https://productlocator.herokuapp.com/api/stores/' + id).then(
       response => {
         if (response.status > 199 && response.status < 301) {
           response.json().then(data => {
@@ -45,13 +45,13 @@ class StoreLayoutPage extends Component {
               storeData: data
             });
 
-            const token = window.localStorage.getItem("token");
+            const token = window.localStorage.getItem('token');
             if (token) {
               this.getShoppingLists(data);
             }
           });
         } else {
-          console.log("error");
+          console.log('error');
         }
       }
     );
@@ -67,7 +67,7 @@ class StoreLayoutPage extends Component {
     //assuming has just one floor for now
     let points = [];
     if (this.state.storeData != null) {
-      points = this.state.storeData["floors"][0]["points"];
+      points = this.state.storeData['floors'][0]['points'];
     }
 
     for (i = 0; i < points.length; i++) {
@@ -89,15 +89,15 @@ class StoreLayoutPage extends Component {
   handleSuggestionClick = productData => {
     //push to this.state.locatedProducts all product info
     this.setState({
-      locatedProduct: productData["suggestion"],
+      locatedProduct: productData['suggestion'],
       showMultiplePalluras: false
     });
   };
 
   //shopping-list
   getShoppingLists(storeData) {
-    let url = "https://productlocator.herokuapp.com/api/shopping-lists/me";
-    let AuthHeader = "Bearer " + this.state.token;
+    let url = 'https://productlocator.herokuapp.com/api/shopping-lists/me';
+    let AuthHeader = 'Bearer ' + this.state.token;
     return fetch(url, {
       headers: {
         Authorization: AuthHeader
@@ -105,16 +105,9 @@ class StoreLayoutPage extends Component {
     })
       .then(response => response.json())
       .then(data => {
-        // console.log(data);
-        // console.log(storeData);
-
-        for (let key in data) {
-          if (data[key].store.id !== storeData.id) {
-            // console.log("hep! " + storeData.id);
-            delete data[key];
-          }
+        if (Array.isArray(data)) {
+          data = data.filter(shoppingList => shoppingList.store.id === storeData.id);
         }
-
 
         this.setState({
           shoppingListsData: data
@@ -125,11 +118,11 @@ class StoreLayoutPage extends Component {
   handleShoppingListClick(id) {
     //Whenever a shopping list is chosen: 1. fetch product info 2. draw their locations 3. ? 4. ?
 
-    const url = "https://productlocator.herokuapp.com/api/shopping-lists/" + id;
+    const url = 'https://productlocator.herokuapp.com/api/shopping-lists/' + id;
 
     fetch(url, {
       headers: {
-        Authorization: "Bearer " + this.state.token
+        Authorization: 'Bearer ' + this.state.token
       }
     })
       .then(response => response.json())
@@ -150,9 +143,9 @@ class StoreLayoutPage extends Component {
 
   getPalluraColor = data => {
     if (data.productInfo === this.state.locatedProduct) {
-      return "green";
+      return 'green';
     } else {
-      return "red";
+      return 'red';
     }
   };
 
@@ -161,27 +154,27 @@ class StoreLayoutPage extends Component {
     //reunat (boarders) ja hyllyt (shelves) tulee nyt vammasesti eri paikoista, ihan hyvin vois olla molemmat vaikka täällä.
     let shelves = [];
     if (this.state.storeData !== null) {
-      shelves = this.state.storeData["floors"][0]["shelves"];
+      shelves = this.state.storeData['floors'][0]['shelves'];
     }
 
     const shelvesStyle = {
       fill: 'lightgrey',
-      ['stroke-width']: '3',
+      ['strokeWidth']: '3',
       stroke: 'grey',
     };
 
     const borderStyle = {
-      stroke: "rgb(0,0,0)"
+      stroke: 'rgb(0,0,0)'
     };
 
     const borders = this.getBoarders();
     let svgWidth = 0;
     let svgHeight = 0;
-    let svgViewBox = "0 0 0 0";
+    let svgViewBox = '0 0 0 0';
     if (borders[0]) {
       svgWidth = borders[0].x2;
       svgHeight = borders[3].y1;
-      svgViewBox = "0 0 " + svgWidth + " " + svgHeight;
+      svgViewBox = '0 0 ' + svgWidth + ' ' + svgHeight;
     }
 
     //yksittäisen tuotteen paikantaminen
@@ -197,12 +190,12 @@ class StoreLayoutPage extends Component {
     };
     const getLocatedProductLocation = (axis, aProduct) => {
       let i = locatedProductShelfIndex(aProduct);
-      if (axis === "x") {
+      if (axis === 'x') {
         let cx = shelves[i].x_location;
         cx += shelves[i].width * 0.5;
         return cx;
       }
-      if (axis === "y") {
+      if (axis === 'y') {
         let cy = shelves[i].y_location;
         cy += shelves[i].height * 0.5;
         return cy;
@@ -220,8 +213,8 @@ class StoreLayoutPage extends Component {
         let products = this.state.locatedShoppingListProducts;
         Object.keys(products).forEach(key => {
           //for each product, draw a circle in the right shelf
-          let x = getLocatedProductLocation("x", products[key]);
-          let y = getLocatedProductLocation("y", products[key]);
+          let x = getLocatedProductLocation('x', products[key]);
+          let y = getLocatedProductLocation('y', products[key]);
           results.push({
             x: x,
             y: y,
@@ -252,9 +245,10 @@ class StoreLayoutPage extends Component {
           }
         </div>
         <div className="store-layout-page-main-map">
-          <svg className="store-layout-page-main-map-svg" viewBox= {svgViewBox != "0 0 0 0" ?  svgViewBox : "0 0 50 50"}>
+          <svg className="store-layout-page-main-map-svg" viewBox= {svgViewBox != '0 0 0 0' ?  svgViewBox : '0 0 50 50'}>
             {borders && borders.length > 0 && borders.map((border) => (
               <line
+                key={Object.values(border)}
                 x1={border.x1}
                 y1={border.y1}
                 x2={border.x2}
@@ -264,6 +258,7 @@ class StoreLayoutPage extends Component {
             ))}
             {shelves && shelves.map((shelf) => (
               <rect
+                key={Object.values(shelf)}
                 x={shelf.x_location}
                 y={shelf.y_location}
                 width={shelf.width}
@@ -290,35 +285,39 @@ class StoreLayoutPage extends Component {
               />
             ))}
           </svg>
-          </div>
+        </div>
         <div className="store-layout-page-container">
           <div className="store-layout-page-footer">
-            { this.state.storeData && token &&
             <div className='shopping-lists'>
-              <b>Shopping lists</b>
-              <ul>
-                <Link to={`/newshoppinglist/${this.state.storeData.id}`}>
-                  <li className="shopping-lists-list-item">Create a new</li>
-                </Link>
-                {shoppingListsData && Array.isArray(shoppingListsData) &&
+              <b className='shopping-lists-title'>Shopping lists</b>
+              { this.state.storeData && token ?
+                <ul>
+                  {shoppingListsData && Array.isArray(shoppingListsData) &&
                   shoppingListsData.map(data => (
                     <li
-                      className="shopping-lists-list-item"
+                      className={`shopping-lists-list-item${selectedShoppingList && selectedShoppingList.id === data.id ? ' selected': ''}`}
                       onClick={() => this.handleShoppingListClick(data.id)}
                       key={data.id}
                     >
                       {data.name}
                     </li>
                   ))}
-              </ul>
+                  <Link to={`/newshoppinglist/${this.state.storeData.id}`}>
+                    <button className="shopping-lists-create-new">Create a new shopping list</button>
+                  </Link>
+                </ul>
+                : <Link to='/login'>
+                  <button className="login-prompt">Log in to create shopping lists</button>
+                </Link> 
+              }
             </div>
-            }
-            {this.state.locatedProduct &&
             <div className="located-product-info">
-              <b>ProudctInfo</b>
-              <ProductInfo product={this.state.locatedProduct} />
+              <b>Product Info</b>
+              {this.state.locatedProduct ?
+                <ProductInfo product={this.state.locatedProduct} />
+                : <p>No product selected</p>
+              }
             </div>
-            }
           </div>
         </div>
       </div>

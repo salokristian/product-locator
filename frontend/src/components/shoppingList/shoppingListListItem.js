@@ -22,14 +22,12 @@ class ShoppingListListItem extends PureComponent {
         className="shopping-page-list-item"
         onClick={this.handleClick}
       >
-        <div>
-          <p className="shopping-page-list-item-title">
-            {name}
-          </p>
-          <p className="shopping-page-list-item-price">
-            {`${price}e`}
-          </p>
-        </div>
+        <p className="shopping-page-list-item-title">
+          {name}
+        </p>
+        <p className="shopping-page-list-item-price">
+          {`${price}e`}
+        </p>
         { /*
         <div className="shopping-page-list-item-remove-container">
           <p className="shopping-page-list-item-remove">

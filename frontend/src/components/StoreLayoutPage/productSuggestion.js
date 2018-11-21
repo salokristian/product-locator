@@ -57,7 +57,7 @@ export default class SearchBar extends Component {
     
     
     // const storeId = "1";
-    let fetchUrl = "https://productlocator.herokuapp.com/api/stores/" + this.props.storeId + "/products?search=" + value;
+    let fetchUrl = 'https://productlocator.herokuapp.com/api/stores/' + this.props.storeId + '/products?search=' + value;
 
     console.log('productsuggestion storeId: ' +  this.props.storeId);
 
@@ -91,14 +91,6 @@ export default class SearchBar extends Component {
   renderSuggestion = suggestion => (
     <div className="product-search-suggestion" onClick={() => this.props.handleSuggestionClick({suggestion})}>
       <div className="product-search-suggestion-name">{suggestion['product_info']['name']}</div>
-      { this.props.selectedShoppingList &&
-        <button
-          className="product-search-suggestion-add-to-cart"
-          onClick={() => addToCart({suggestion}, this.props.selectedShoppingList, this.props.token)}
-        >
-          Add to cart
-        </button>
-      }
     </div>
   );
 

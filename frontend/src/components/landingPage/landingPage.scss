@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Mali');
 
+.landing-page {
+  width: 100%;
+  height: 100vh;
+}
+
 .landing-page-header-container {
   display: inline-flex;
   justify-content: space-between;
@@ -7,29 +12,37 @@
   margin-bottom: 10px;
 }
 
-.landing-page-title {
-  display: flex;
-  width: 90%;
-  height: 50px;
-  padding-top: 10px;
+#stores-search {
+  display: block;
+  margin: 35px auto;
+  width: 250px;
+  height: 28px;
+  font-size: 20px;
+  border-radius: 5px;
+  outline: none;
+  padding: 5px;
 }
 
-.landing-page-header-container h2 {
-  margin: auto;
-  font-size: 30px;
-  font-weight: 600;
+.landing-page-title {
+  margin: 50px auto;
   font-family: 'Mali';
+  text-align: center;
+  font-size: 48px;
 }
+
 
 .landing-page-header-container .landing-page-login {
-  margin: auto;
-  width: 80px;
+  margin: 20px;
+  width: 60px;
   border: 1px solid black;
-  border-radius: 40px;
+  border-radius: 30px;
   background: lightblue;
-  height: 80px;
+  height: 60px;
   cursor: pointer;
   display: flex;
+  position: absolute;
+  top: 0px;
+  right: 0px;
 }
 
 .landing-page-header-container .landing-page-login p {
@@ -56,11 +69,11 @@
 }
 
 .landing-page-store-list-container {
-  width: 100%;
-  min-height: 300px;
-  border: 1px solid black;
-  max-height: 500px;
-  overflow-y: scroll;
+  padding: 30px;
+  width: 250px;
+  margin: 0 auto;
+  border-radius: 10px;
+  background-color: white;
 }
 
 .landing-page-filter-titles {
@@ -87,14 +100,16 @@
   overflow: hidden;
 }
 
-.landing-page-user-info {
-  float: right;
-  margin-right: auto;
+#logout {
+  position: absolute;
+  top: 90px;
+  right: 24px;
   cursor: pointer;
 }
 
-.landing-page input {
-  margin-top: 10px;
-  height: 20px;
-  width: 40%;
+.marketing-quote {
+  margin: 0 auto 50px auto;
+  width: 300px;
+  font-family: mali;
+  text-align: center;
 }

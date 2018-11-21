@@ -82,22 +82,15 @@ class LandingPage extends Component {
   }
 
   render() {
-    const { store, nearby, favourites, history, adminTools, searchText, account } = this.state;
+    const { store, searchText, account } = this.state;
     const { stores } = this.props;
-
-    const clickedFilterBorder = {
-      border: '3px solid black',
-    };
-    const nonClickedFilterBorder = {
-      border: '1px solid black',
-    };
   
     return (
       <div className="landing-page">
         <div className="landing-page-header-container">
-          <div className="landing-page-title">
-            <h2> Product Locator </h2>
-          </div>
+          <h2 className="landing-page-title">
+            Product Locator
+          </h2>
           { account ?
             <div 
               className="landing-page-login"
@@ -117,61 +110,25 @@ class LandingPage extends Component {
             </Link>
           }
         </div>
-        {account && <p className="landing-page-user-info" onClick={this.logOut}> Log out </p>}
-        <div className="landing-page-filters">
-          <div 
-            className="landing-page-filter-names"
-            style={nearby ? clickedFilterBorder : nonClickedFilterBorder}
-            onClick={this.nearbyClick}
-          >
-            <p> Nearby </p>
-          </div>
-          { account &&
-          <div 
-            className="landing-page-filter-names"
-            style={favourites ? clickedFilterBorder : nonClickedFilterBorder}
-            onClick={this.favouritesClick}
-          >
-            <p> Favourites </p>
-          </div>
-          }
-          { account &&
-          <div 
-            className="landing-page-filter-names"
-            style={history ? clickedFilterBorder : nonClickedFilterBorder}
-            onClick={this.historyClick}
-          >
-            <p> History </p>
-          </div>
-          }
-          { account && account.role === 'Admin' &&
-          <div 
-            className="landing-page-filter-names"
-            style={adminTools ? clickedFilterBorder : nonClickedFilterBorder}
-            onClick={this.adminToolsClick}
-          >
-            <p> Admin tools </p>
-          </div>
-          }
-        </div>
-        <input type="text" value={searchText} onChange={this.handleStoreSearch} placeholder="Search stores by name"/>
-        <div className="landing-page-filter-titles">
-          <p className="landing-page-title-store-name"> Store name </p>
-          <p className="landing-page-title-distance"> Distance </p>
-        </div>
+        <p className="marketing-quote">Find products with ease and create your own shopping lists!</p>
+        {account && <button id="logout" onClick={this.logOut}> Log out </button>}
+        <input id="stores-search" type="text" value={searchText} onChange={this.handleStoreSearch} placeholder="Search stores by name"/>
         <div className="landing-page-store-list-container">
           { stores && stores.map((store) => (
             <StoreListItem
               id={store.id}
-              title={store.name}
-              distance={store.distance}
+              title={store.name}         
+              phone={store.phone}
               key={store.id}
               onClick={this.selectStore}
             />
           ))
           }
+          {
+            stores.length === 0 &&
+            <p>No matching stores found</p>
+          }
         </div>
-        <p> {store && `You have selected: ${store.name} which is ${store.distance} meters away`} </p>
       </div>
     );
   }

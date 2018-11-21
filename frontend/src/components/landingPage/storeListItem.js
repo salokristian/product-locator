@@ -3,6 +3,7 @@ import React, { PureComponent } from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import './storeListItem.scss';
+import phoneLogo from './telephone-handle-silhouette.svg';
 
 class StoreListItem extends PureComponent {
 
@@ -15,25 +16,24 @@ class StoreListItem extends PureComponent {
 
   render() {
     const {
-      title, distance, id,
+      title, phone, id,
     } = this.props;
 
     return (
-      <div
-        className="landing-page__storeSearch-list-item"
-        onClick={this.handleClick}
-      >
-        <Link to={`/stores/${id}`}>
+      <Link to={`/stores/${id}`}>
+        <div
+          className="landing-page__storeSearch-list-item"
+        >
           <div>
             <p className="landing-page__storeSearch-list-item-title">
               {title}
             </p>
             <p className="landing-page__storeSearch-list-item-distance">
-              {`${distance}m`}
+              <img className="phone-logo" src={phoneLogo}/> {phone}
             </p>
           </div>
-        </Link>
-      </div>
+        </div>
+      </Link>
     );
   }
 }

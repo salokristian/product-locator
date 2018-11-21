@@ -66,10 +66,10 @@ class LogIn extends Component {
       <div className="product-locator-login-page">
         <div className="product-locator-login-container">
           <h1>
-            Product locator Log In
+            Log In
           </h1>
           <h2>
-            User name:
+            Username:
             <input type="text" value={this.state.name} onChange={this.handleNameChange} className="login-input" />
           </h2>
           <h2>

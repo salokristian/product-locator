@@ -13,9 +13,25 @@ export default class ShoppingList extends Component {
       name: '',
       description: '',
       error: false,
+      storeName: ''
     };
     this.token = window.localStorage.getItem('token') || null;
     this.storeId = props.match.params.id || null;
+  }
+
+  componentDidMount() {
+    fetch('https://productlocator.herokuapp.com/api/stores/' + this.storeId, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+      },
+    }).then(res => {
+      if (res.status > 199 && res.status < 301 ) {
+        res.json().then(data => {
+          this.setState({ storeName: data.name });
+        });
+      }
+    });
   }
 
   handleNameChange = (event) => {
@@ -96,14 +112,14 @@ export default class ShoppingList extends Component {
 */
 
   render() {
-    const { products, selectedProduct, error } = this.state;
+    const { products, selectedProduct, error, storeName } = this.state;
 
     return (
-      <div>
+      <div className="shopping-list-root">
         { this.token && this.storeId ?
           <div>
             <div className="shopping-list-page">
-              <h2 className="shopping-list-page-header"> Create a new shopping list </h2>
+              <h2 className="shopping-list-page-header"> {'Create a new shopping list' + (storeName.length > 0 ? (' for ' + storeName) : '')}</h2>
             </div>
             <div className="shopping-list-page">
               <div className="shopping-list-page-to-fill-container">
@@ -124,8 +140,6 @@ export default class ShoppingList extends Component {
               />
             </div>
             <div className="shopping-list-page-list-container">
-              <p className="shopping-list-page-list-name">Product name</p>
-              <p className="shopping-list-page-list-price">Price</p>
               { products && products.map((product) => (
                 <ShoppingListListItem
                   id={product.id}
