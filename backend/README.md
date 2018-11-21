@@ -1,5 +1,20 @@
 ## Grocery Store Product Locator Backend
 
+### Structure
+
+The backend consists of two apps, `api` and `users`. They contain the api endpoints, views and models, and the custom user model, respectively.
+
+### Endpoints
+
+- POST /api/token for fetching a JWT token
+- GET /api/stores for fetching all stores
+- GET /api/stores/:id for fetching a store's data
+- GET /api/stores/:id/products for fetching a store's products
+- POST /api/shopping-lists/me for creating a new shopping list (requires valid JWT)
+- GET /api/shopping-lists/me for getting all a user's shopping lists (requires valid JWT)
+- GET /api/shopping-lists/:id for fetching a specific shopping list (requires valid JWT)
+- DELETE /api/shopping-lists/:id for deleting a shopping list (requires valid JWT)
+
 ### Setup
 
 The Django backend and PostgreSQL database are run in a docker container, which is exposed to the operating system on port 8000. Docker version >= 3.6 and Docker compose are required to run the container. If you are running the container for the first time, database migrations must be run before using the container.
